@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { ReduxProvider } from "@/redux/provider";
+import { CompareBar } from "@/components/property/compare-bar";
 
 export const metadata: Metadata = {
   title: {
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col font-sans">
         <ReduxProvider>
           {children}
+          <CompareBar />
           <Toaster position="bottom-right" richColors closeButton />
         </ReduxProvider>
       </body>

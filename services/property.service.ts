@@ -85,6 +85,11 @@ export const propertyService = {
   async getByAgent(agentId: string): Promise<Property[]> {
     return properties.filter((p) => p.agentId === agentId);
   },
+
+  async getByIds(ids: string[]): Promise<Property[]> {
+    const idSet = new Set(ids);
+    return properties.filter((p) => idSet.has(p.id));
+  },
 };
 
 function sortProperties(list: Property[], sort: PropertySort): Property[] {

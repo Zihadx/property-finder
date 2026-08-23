@@ -1,12 +1,15 @@
 "use client";
 
+import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Bed, Bath, Ruler, Heart, MapPin } from "lucide-react";
+import { Bed, Bath, Ruler, Heart, MapPin, Eye, Scale } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PropertyPrice } from "./property-price";
+import { PropertyQuickView } from "./property-quick-view";
 import { useAppDispatch, useAppSelector } from "@/redux/hooks";
 import { toggleFavorite } from "@/redux/slices/favoritesSlice";
+import { addToCompare, removeFromCompare } from "@/redux/slices/compareSlice";
 import { cn } from "@/lib/utils";
 import type { Property } from "@/types/property";
 
@@ -20,6 +23,8 @@ const statusVariant: Record<Property["status"], "success" | "danger" | "warning"
 export function PropertyCard({ property }: { property: Property }) {
   const dispatch = useAppDispatch();
   const isFavorite = useAppSelector((state) => state.favorites.propertyIds.includes(property.id));
+  const isComparing = useAppSelector((state) => state.compare.propertyIds.includes(property.id));
+  const [quickViewOpen, setQuickViewOpen] = React.useState(false);
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface transition-shadow duration-200 hover:shadow-[var(--shadow-md)]">
@@ -36,20 +41,44 @@ export function PropertyCard({ property }: { property: Property }) {
             <Badge variant={statusVariant[property.status]}>{property.status}</Badge>
             {property.featured && <Badge variant="accent">Featured</Badge>}
           </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              setQuickViewOpen(true);
+            }}
+            className="absolute inset-x-3 bottom-3 flex translate-y-2 items-center justify-center gap-2 rounded-[var(--radius-sm)] bg-surface/95 py-2 text-sm font-medium text-foreground opacity-0 backdrop-blur-sm transition-all duration-200 group-hover:translate-y-0 group-hover:opacity-100"
+          >
+            <Eye className="h-3.5 w-3.5" />
+            Quick View
+          </button>
         </div>
       </Link>
 
-      <button
-        type="button"
-        aria-label={isFavorite ? "Remove from saved properties" : "Save property"}
-        aria-pressed={isFavorite}
-        onClick={() => dispatch(toggleFavorite(property.id))}
-        className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 backdrop-blur-sm transition-colors hover:bg-surface"
-      >
-        <Heart
-          className={cn("h-4 w-4 transition-colors", isFavorite ? "fill-danger text-danger" : "text-foreground")}
-        />
-      </button>
+      <div className="absolute right-3 top-3 flex flex-col gap-2">
+        <button
+          type="button"
+          aria-label={isFavorite ? "Remove from saved properties" : "Save property"}
+          aria-pressed={isFavorite}
+          onClick={() => dispatch(toggleFavorite(property.id))}
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 backdrop-blur-sm transition-colors hover:bg-surface"
+        >
+          <Heart
+            className={cn("h-4 w-4 transition-colors", isFavorite ? "fill-danger text-danger" : "text-foreground")}
+          />
+        </button>
+        <button
+          type="button"
+          aria-label={isComparing ? "Remove from comparison" : "Add to comparison"}
+          aria-pressed={isComparing}
+          onClick={() =>
+            dispatch(isComparing ? removeFromCompare(property.id) : addToCompare(property.id))
+          }
+          className="flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 backdrop-blur-sm transition-colors hover:bg-surface"
+        >
+          <Scale className={cn("h-4 w-4 transition-colors", isComparing ? "text-accent" : "text-foreground")} />
+        </button>
+      </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
         <div>
@@ -85,6 +114,8 @@ export function PropertyCard({ property }: { property: Property }) {
           </span>
         </div>
       </div>
+
+      <PropertyQuickView property={property} open={quickViewOpen} onClose={() => setQuickViewOpen(false)} />
     </article>
   );
 }

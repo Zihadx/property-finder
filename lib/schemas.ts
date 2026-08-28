@@ -22,3 +22,22 @@ export const siteVisitSchema = z.object({
 });
 
 export type SiteVisitFormValues = z.infer<typeof siteVisitSchema>;
+
+export const propertyFormSchema = z.object({
+  title: z.string().trim().min(5, "Enter a descriptive title"),
+  type: z.string().min(1, "Select a property type"),
+  purpose: z.enum(["Sale", "Rent"]),
+  status: z.enum(["Available", "Sold", "Rented", "Under Offer"]),
+  price: z.number({ error: "Enter a valid price" }).positive("Enter a valid price"),
+  area: z.string().min(1, "Select an area"),
+  address: z.string().trim().min(5, "Enter a full address"),
+  bedrooms: z.number().min(0),
+  bathrooms: z.number().min(0),
+  areaSqft: z.number({ error: "Enter the area in sqft" }).positive("Enter the area in sqft"),
+  agentId: z.string().min(1, "Assign an agent"),
+  amenities: z.string().optional(),
+  description: z.string().trim().min(20, "Add at least a short description"),
+  featured: z.boolean().optional(),
+});
+
+export type PropertyFormValues = z.infer<typeof propertyFormSchema>;

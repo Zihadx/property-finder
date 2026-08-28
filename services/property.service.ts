@@ -90,6 +90,11 @@ export const propertyService = {
     const idSet = new Set(ids);
     return properties.filter((p) => idSet.has(p.id));
   },
+
+  async listByTypes(types: PropertyType[]): Promise<Property[]> {
+    const typeSet = new Set(types);
+    return properties.filter((p) => typeSet.has(p.type));
+  },
 };
 
 function sortProperties(list: Property[], sort: PropertySort): Property[] {

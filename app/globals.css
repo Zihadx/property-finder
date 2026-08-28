@@ -20,9 +20,14 @@
   /* Brand */
   --primary: #1c1b19;          /* ink — used for primary actions */
   --primary-foreground: #f7f4ee;
+  --primary-hover: #33312c;
+  --primary-active: #0f0e0d;
   --accent: #a9863f;           /* muted brass */
   --accent-foreground: #1c1b19;
   --accent-soft: #f1e6cf;
+  --accent-strong: #7d6230;    /* AA-compliant brass for small text on light backgrounds */
+  --accent-hover: #957439;
+  --accent-active: #7d6230;
 
   /* Secondary / status */
   --secondary: #3f4a3a;        /* deep olive */
@@ -36,7 +41,7 @@
 
   /* Text */
   --muted-foreground: #6b6559;
-  --caption-foreground: #948c7a;
+  --caption-foreground: #726b5c;
 
   /* Radii — restrained, architectural, not bubble-rounded */
   --radius-sm: 2px;
@@ -59,9 +64,14 @@
 
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent-soft: var(--accent-soft);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-active: var(--accent-active);
 
   --color-secondary: var(--secondary);
   --color-secondary-foreground: var(--secondary-foreground);

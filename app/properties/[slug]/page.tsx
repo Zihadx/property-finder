@@ -51,8 +51,46 @@ export default async function PropertyDetailPage({
     propertyService.getSimilar(property),
   ]);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "RealEstateListing",
+    name: property.title,
+    description: property.description,
+    url: `https://listeasy.example.com/properties/${property.slug}`,
+    image: property.images,
+    datePosted: property.listedAt,
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: property.location.address,
+      addressLocality: property.location.area,
+      addressCountry: "BD",
+    },
+    geo: {
+      "@type": "GeoCoordinates",
+      latitude: property.location.lat,
+      longitude: property.location.lng,
+    },
+    numberOfRooms: property.bedrooms,
+    numberOfBathroomsTotal: property.bathrooms,
+    floorSize: {
+      "@type": "QuantitativeValue",
+      value: property.areaSqft,
+      unitCode: "FTK",
+    },
+    offers: {
+      "@type": "Offer",
+      price: property.price,
+      priceCurrency: "BDT",
+      availability:
+        property.status === "Available" ? "https://schema.org/InStock" : "https://schema.org/SoldOut",
+      businessFunction:
+        property.purpose === "Rent" ? "http://purl.org/goodrelations/v1#LeaseOut" : "http://purl.org/goodrelations/v1#Sell",
+    },
+  };
+
   return (
     <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SiteHeader />
       <main className="mx-auto max-w-7xl px-6 py-10 pb-28 lg:pb-10">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_360px]">

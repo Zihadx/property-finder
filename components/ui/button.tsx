@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 
 const variantClasses = {
   primary:
-    "bg-primary text-primary-foreground hover:bg-[#33312c] active:bg-[#0f0e0d]",
+    "bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active",
   accent:
-    "bg-accent text-accent-foreground hover:bg-[#957439] active:bg-[#7d6230]",
+    "bg-accent text-accent-foreground hover:bg-accent-hover active:bg-accent-active",
   outline:
     "border border-border-strong bg-transparent text-foreground hover:bg-surface-muted",
   ghost: "bg-transparent text-foreground hover:bg-surface-muted",

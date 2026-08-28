@@ -15,7 +15,7 @@ export function RecentInquiries({ inquiries }: { inquiries: Inquiry[] }) {
     <Card className="p-5">
       <div className="flex items-center justify-between">
         <p className="font-display text-base text-foreground">Recent inquiries</p>
-        <Link href="/dashboard/leads" className="text-xs text-accent hover:underline">
+        <Link href="/dashboard/leads" className="text-xs text-accent-strong hover:underline">
           View all
         </Link>
       </div>

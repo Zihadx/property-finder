@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 
 const variantClasses = {
   neutral: "bg-surface-muted text-foreground",
-  accent: "bg-accent-soft text-accent",
+  accent: "bg-accent-soft text-accent-strong",
   success: "bg-secondary text-secondary-foreground",
   warning: "bg-warning text-warning-foreground",
   danger: "bg-danger text-danger-foreground",

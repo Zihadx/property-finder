@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { ImagePlus } from "lucide-react";
+import { ImagePlus, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -40,7 +40,6 @@ export function PropertyForm({
   async function onSubmit(values: PropertyFormValues) {
     // No backend yet — simulate the save so the flow feels real.
     await new Promise((resolve) => setTimeout(resolve, 900));
-    console.log("Property form submitted (mock):", values);
     toast.success(mode === "create" ? "Property created" : "Property updated", {
       description: `"${values.title}" has been saved to your mock inventory.`,
     });
@@ -181,6 +180,7 @@ export function PropertyForm({
           Cancel
         </Button>
         <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {isSubmitting ? "Saving…" : mode === "create" ? "Create Property" : "Save Changes"}
         </Button>
       </div>

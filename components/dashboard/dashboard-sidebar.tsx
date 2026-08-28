@@ -33,7 +33,7 @@ export function DashboardSidebar() {
     <aside className="hidden w-64 shrink-0 flex-col border-r border-border bg-surface lg:flex">
       <div className="flex h-16 items-center gap-2 border-b border-border px-6">
         <span className="font-display text-lg text-foreground">ListEasy</span>
-        <span className="ledger-value text-xs tracking-[0.2em] text-accent">BD</span>
+        <span className="ledger-value text-xs tracking-[0.2em] text-accent-strong">BD</span>
       </div>
 
       <nav className="flex-1 space-y-1 p-3">

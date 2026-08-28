@@ -35,7 +35,7 @@ export default async function DashboardPropertiesPage() {
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-[var(--radius-md)] border border-border bg-surface">
+      <div className="hidden overflow-x-auto rounded-[var(--radius-md)] border border-border bg-surface lg:block">
         <table className="w-full min-w-[720px] border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs text-caption-foreground">
@@ -98,6 +98,54 @@ export default async function DashboardPropertiesPage() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Mobile: table columns don't fit thumb-scrollable width, so below lg
+          each property becomes a self-contained card instead of a horizontally
+          scrolling table row. */}
+      <div className="flex flex-col gap-3 lg:hidden">
+        {properties.map((property) => (
+          <div key={property.id} className="rounded-[var(--radius-md)] border border-border bg-surface p-4">
+            <div className="flex items-start gap-3">
+              <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-[var(--radius-sm)]">
+                <Image src={property.images[0]} alt="" fill sizes="80px" className="object-cover" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <Link href={`/properties/${property.slug}`} className="line-clamp-2 text-sm font-medium text-foreground hover:text-accent">
+                  {property.title}
+                </Link>
+                <p className="mt-0.5 text-xs text-muted-foreground">{property.location.area}</p>
+                <div className="mt-2 flex items-center gap-2">
+                  <Badge variant={statusVariant[property.status]}>{property.status}</Badge>
+                  {property.featured && <Badge variant="accent">Featured</Badge>}
+                </div>
+              </div>
+            </div>
+            <div className="mt-3 flex items-center justify-between border-t border-border pt-3">
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <span className="ledger-value text-sm text-foreground">{formatBDT(property.price)}</span>
+                <span>{property.views} views</span>
+                <span>{property.inquiries} inq.</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Link
+                  href={`/properties/${property.slug}`}
+                  className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] hover:bg-surface-muted"
+                  aria-label="View"
+                >
+                  <Eye className="h-4 w-4" />
+                </Link>
+                <Link
+                  href={`/dashboard/properties/${property.id}/edit`}
+                  className="flex h-9 w-9 items-center justify-center rounded-[var(--radius-sm)] hover:bg-surface-muted"
+                  aria-label="Edit"
+                >
+                  <Pencil className="h-4 w-4" />
+                </Link>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

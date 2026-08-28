@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMounted } from "@/lib/use-mounted";
@@ -21,6 +21,7 @@ export function Dialog({
   className?: string;
 }) {
   const mounted = useMounted();
+  const reduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     if (!open) return;
@@ -53,10 +54,10 @@ export function Dialog({
             role="dialog"
             aria-modal="true"
             aria-label={title}
-            initial={{ opacity: 0, y: 24, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 12, scale: 0.98 }}
-            transition={{ duration: 0.18, ease: "easeOut" }}
+            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.98 }}
+            animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
+            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }}
+            transition={{ duration: reduceMotion ? 0.01 : 0.18, ease: "easeOut" }}
             className={cn(
               "relative flex max-h-[88vh] w-full max-w-md flex-col overflow-hidden rounded-t-[var(--radius-lg)] bg-surface shadow-[var(--shadow-lg)] sm:rounded-[var(--radius-lg)]",
               className

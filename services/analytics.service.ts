@@ -101,7 +101,75 @@ export const analyticsService = {
       .slice(0, limit)
       .map((p) => ({ title: p.title, slug: p.slug, inquiries: p.inquiries, views: p.views }));
   },
+
+  /**
+   * Computes a small set of plain-language business insights from the
+   * mock dataset's actual numbers — every sentence here traces back to a
+   * real calculation below, not a canned string. Swap the underlying
+   * data source and these keep working unchanged.
+   */
+  async getInsights(): Promise<string[]> {
+    const insights: string[] = [];
+    const now = new Date("2026-08-23");
+
+    // 1. Week-over-week lead change (reuses the same window as getOverview)
+    const weekAgo = shiftDays(now, -7);
+    const twoWeeksAgo = shiftDays(now, -14);
+    const thisWeek = inquiries.filter((i) => new Date(i.createdAt) >= weekAgo).length;
+    const lastWeek = inquiries.filter((i) => new Date(i.createdAt) >= twoWeeksAgo && new Date(i.createdAt) < weekAgo).length;
+    if (thisWeek > 0 || lastWeek > 0) {
+      const pct = lastWeek === 0 ? 100 : Math.round(((thisWeek - lastWeek) / lastWeek) * 100);
+      insights.push(`${thisWeek} new inquiries this week, ${pct >= 0 ? "up" : "down"} ${Math.abs(pct)}% vs last week.`);
+    }
+
+    // 2. Area generating the most inquiries relative to its listing count
+    const areaStats = areas
+      .map((area) => {
+        const areaProperties = properties.filter((p) => p.location.areaSlug === area.slug);
+        const areaInquiryCount = areaProperties.reduce(
+          (sum, p) => sum + inquiries.filter((i) => i.propertyId === p.id).length,
+          0
+        );
+        return { name: area.name, listings: areaProperties.length, inquiryCount: areaInquiryCount };
+      })
+      .filter((a) => a.listings >= 2);
+    const topArea = [...areaStats].sort((a, b) => b.inquiryCount / b.listings - a.inquiryCount / a.listings)[0];
+    if (topArea && topArea.inquiryCount > 0) {
+      const perListing = (topArea.inquiryCount / topArea.listings).toFixed(1);
+      insights.push(`${topArea.name} listings are averaging ${perListing} inquiries each — the strongest demand-per-listing of any area right now.`);
+    }
+
+    // 3. Pending site visits that need follow-up
+    const pendingVisits = siteVisits.filter((v) => v.status === "Pending").length;
+    if (pendingVisits > 0) {
+      insights.push(`${pendingVisits} site visit${pendingVisits === 1 ? " is" : "s are"} still pending confirmation — follow up before they go cold.`);
+    }
+
+    // 4. Listing with outlier interest (views well above the dataset average)
+    const avgViews = properties.reduce((sum, p) => sum + p.views, 0) / properties.length;
+    const outlier = [...properties].sort((a, b) => b.views - a.views)[0];
+    if (outlier && outlier.views > avgViews * 1.5) {
+      const multiple = (outlier.views / avgViews).toFixed(1);
+      insights.push(`"${outlier.title}" is getting ${multiple}x the average listing's views — consider featuring it or following up on its inquiries directly.`);
+    }
+
+    // 5. Busiest lead source this period
+    const sourceCounts = countBy(inquiries, (i) => i.source);
+    const topSource = Object.entries(sourceCounts).sort((a, b) => b[1] - a[1])[0];
+    if (topSource) {
+      const share = Math.round((topSource[1] / inquiries.length) * 100);
+      insights.push(`${topSource[0]} is your top lead source, responsible for ${share}% of inquiries.`);
+    }
+
+    return insights.slice(0, 4);
+  },
 };
+
+function shiftDays(date: Date, days: number): Date {
+  const result = new Date(date);
+  result.setDate(result.getDate() + days);
+  return result;
+}
 
 function countBy<T, K extends string>(items: T[], keyFn: (item: T) => K): Record<K, number> {
   const result = {} as Record<K, number>;

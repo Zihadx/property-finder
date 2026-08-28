@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { HeroSearch } from "./hero-search";
 
 export function Hero() {
   return (
@@ -18,7 +19,10 @@ export function Hero() {
             your listings, leads, and site visits into a single catalog your customers actually
             trust.
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+
+          <HeroSearch />
+
+          <div className="mt-6 flex flex-wrap gap-3">
             <Button size="lg" asChild>
               <Link href="/properties">Browse Properties</Link>
             </Button>

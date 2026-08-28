@@ -3,6 +3,7 @@
 import * as React from "react";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { areaOptions, budgetPresets, propertyTypes } from "@/lib/filter-options";
 
@@ -16,6 +17,7 @@ export function PropertyFiltersForm({ onApply }: { onApply?: () => void }) {
   const [purpose, setPurpose] = React.useState(searchParams.get("purpose") ?? "");
   const [budget, setBudget] = React.useState(searchParams.get("budget") ?? "0");
   const [bedrooms, setBedrooms] = React.useState(searchParams.get("bedrooms") ?? "");
+  const [query, setQuery] = React.useState(searchParams.get("q") ?? "");
 
   function apply() {
     const params = new URLSearchParams(searchParams.toString());
@@ -23,6 +25,7 @@ export function PropertyFiltersForm({ onApply }: { onApply?: () => void }) {
     setOrDelete(params, "type", type);
     setOrDelete(params, "purpose", purpose);
     setOrDelete(params, "bedrooms", bedrooms);
+    setOrDelete(params, "q", query.trim());
 
     const preset = budgetPresets[Number(budget)];
     if (preset?.min !== undefined) params.set("minPrice", String(preset.min));
@@ -42,12 +45,22 @@ export function PropertyFiltersForm({ onApply }: { onApply?: () => void }) {
     setPurpose("");
     setBudget("0");
     setBedrooms("");
+    setQuery("");
     router.push(pathname);
     onApply?.();
   }
 
   return (
     <div className="flex flex-col gap-5 p-5">
+      <Field label="Keyword">
+        <Input
+          placeholder="Search by title, area, or address…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && apply()}
+        />
+      </Field>
+
       <Field label="Area">
         <Select value={area} onChange={(e) => setArea(e.target.value)}>
           <option value="">All areas</option>

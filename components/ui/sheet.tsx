@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMounted } from "@/lib/use-mounted";
@@ -17,6 +17,7 @@ interface SheetProps {
 
 export function Sheet({ open, onClose, title, children, side = "right" }: SheetProps) {
   const mounted = useMounted();
+  const reduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     if (!open) return;
@@ -34,7 +35,9 @@ export function Sheet({ open, onClose, title, children, side = "right" }: SheetP
   if (!mounted) return null;
 
   const panelVariants =
-    side === "bottom"
+    reduceMotion
+      ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 } }
+      : side === "bottom"
       ? { initial: { y: "100%" }, animate: { y: 0 }, exit: { y: "100%" } }
       : { initial: { x: "100%" }, animate: { x: 0 }, exit: { x: "100%" } };
 
@@ -57,7 +60,7 @@ export function Sheet({ open, onClose, title, children, side = "right" }: SheetP
             initial={panelVariants.initial}
             animate={panelVariants.animate}
             exit={panelVariants.exit}
-            transition={{ type: "spring", damping: 32, stiffness: 320 }}
+            transition={{ type: reduceMotion ? "tween" : "spring", damping: 32, stiffness: 320, duration: reduceMotion ? 0.01 : undefined }}
             className={cn(
               "absolute flex flex-col bg-surface shadow-[var(--shadow-lg)]",
               side === "bottom"

@@ -32,7 +32,7 @@ export default async function DashboardLeadsPage() {
         <h1 className="font-display text-2xl text-foreground">Leads</h1>
       </div>
 
-      <div className="overflow-x-auto rounded-[var(--radius-md)] border border-border bg-surface">
+      <div className="hidden overflow-x-auto rounded-[var(--radius-md)] border border-border bg-surface lg:block">
         <table className="w-full min-w-[820px] border-collapse text-sm">
           <thead>
             <tr className="border-b border-border text-left text-xs text-caption-foreground">
@@ -70,6 +70,29 @@ export default async function DashboardLeadsPage() {
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="flex flex-col gap-3 lg:hidden">
+        {leads.map((lead) => (
+          <div key={lead.id} className="rounded-[var(--radius-md)] border border-border bg-surface p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-sm font-medium text-foreground">{lead.customerName}</p>
+                <p className="text-xs text-muted-foreground">{lead.customerPhone}</p>
+              </div>
+              <Badge variant={statusVariant[lead.status]}>{lead.status}</Badge>
+            </div>
+            <p className="mt-2 text-sm text-muted-foreground">{propertyMap[lead.propertyId]?.title ?? "—"}</p>
+            <div className="mt-3 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-border pt-3 text-xs text-muted-foreground">
+              <span>Agent: {agentMap[lead.agentId]?.name ?? "—"}</span>
+              <span>{lead.source}</span>
+              <Badge variant={priorityVariant[lead.priority]}>{lead.priority}</Badge>
+              <span className="ml-auto">
+                {new Date(lead.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short" })}
+              </span>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

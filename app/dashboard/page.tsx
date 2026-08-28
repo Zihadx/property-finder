@@ -15,20 +15,15 @@ import { formatBDT } from "@/lib/utils";
 export const metadata: Metadata = { title: "Dashboard" };
 
 export default async function DashboardOverviewPage() {
-  const [overview, trend, statusBreakdown, listingsByArea, recentInquiries, topInterest] = await Promise.all([
+  const [overview, trend, statusBreakdown, listingsByArea, recentInquiries, topInterest, insights] = await Promise.all([
     analyticsService.getOverview(),
     analyticsService.getInquiryTrend(),
     analyticsService.getStatusBreakdown(),
     analyticsService.getListingsByArea(),
     inquiryService.getRecent(5),
     analyticsService.getTopInterest(5),
+    analyticsService.getInsights(),
   ]);
-
-  const insights = [
-    `${overview.newLeadsThisWeek} new inquiries this week, ${overview.leadsChangePct >= 0 ? "up" : "down"} ${Math.abs(overview.leadsChangePct)}% vs last week.`,
-    `${overview.siteVisitRequests} site visits are pending or confirmed — follow up before they go cold.`,
-    `${topInterest[0]?.title ?? "A featured listing"} is generating the most interest this month.`,
-  ];
 
   return (
     <div className="flex flex-col gap-6">

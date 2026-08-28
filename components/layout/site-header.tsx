@@ -14,7 +14,7 @@ export function SiteHeader() {
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-baseline gap-2">
           <span className="font-display text-xl tracking-tight text-foreground">ListEasy</span>
-          <span className="ledger-value text-xs tracking-[0.2em] text-accent">BD</span>
+          <span className="ledger-value text-xs tracking-[0.2em] text-accent-strong">BD</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">

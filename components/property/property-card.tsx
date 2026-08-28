@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion, useReducedMotion } from "motion/react";
 import { Bed, Bath, Ruler, Heart, MapPin, Eye, Scale } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PropertyPrice } from "./property-price";
@@ -25,6 +26,7 @@ export function PropertyCard({ property }: { property: Property }) {
   const isFavorite = useAppSelector((state) => state.favorites.propertyIds.includes(property.id));
   const isComparing = useAppSelector((state) => state.compare.propertyIds.includes(property.id));
   const [quickViewOpen, setQuickViewOpen] = React.useState(false);
+  const reduceMotion = useReducedMotion();
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface transition-shadow duration-200 hover:shadow-[var(--shadow-md)]">
@@ -63,9 +65,17 @@ export function PropertyCard({ property }: { property: Property }) {
           onClick={() => dispatch(toggleFavorite(property.id))}
           className="flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 backdrop-blur-sm transition-colors hover:bg-surface"
         >
-          <Heart
-            className={cn("h-4 w-4 transition-colors", isFavorite ? "fill-danger text-danger" : "text-foreground")}
-          />
+          <motion.span
+            key={isFavorite ? "on" : "off"}
+            initial={reduceMotion ? false : { scale: 0.6 }}
+            animate={{ scale: 1 }}
+            transition={{ type: "spring", stiffness: 500, damping: 15 }}
+            className="flex"
+          >
+            <Heart
+              className={cn("h-4 w-4 transition-colors", isFavorite ? "fill-danger text-danger" : "text-foreground")}
+            />
+          </motion.span>
         </button>
         <button
           type="button"

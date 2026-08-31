@@ -28,3 +28,12 @@ function trimDecimal(value: number): string {
 export function formatArea(sqft: number): string {
   return `${sqft.toLocaleString("en-BD")} sqft`;
 }
+
+/**
+ * Formats an ISO date as e.g. "Aug 1, 2026". Deliberately not a relative
+ * "X days ago" string — that would keep drifting further from "recent"
+ * as real time passes against a fixed mock dataset.
+ */
+export function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}

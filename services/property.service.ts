@@ -95,6 +95,25 @@ export const propertyService = {
     const typeSet = new Set(types);
     return properties.filter((p) => typeSet.has(p.type));
   },
+
+  /** Catalog-wide min/median/max listing price — buyer-facing decision support, not a business metric. */
+  async getPriceRange(): Promise<{ min: number; median: number; max: number }> {
+    const sorted = [...properties].map((p) => p.price).sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    const median = sorted.length % 2 === 0 ? (sorted[mid - 1] + sorted[mid]) / 2 : sorted[mid];
+    return { min: sorted[0], median, max: sorted[sorted.length - 1] };
+  },
+
+  /** How many listings fall into each property type, most common first. */
+  async getTypeDistribution(): Promise<{ type: PropertyType; count: number }[]> {
+    const counts = new Map<PropertyType, number>();
+    for (const p of properties) {
+      counts.set(p.type, (counts.get(p.type) ?? 0) + 1);
+    }
+    return Array.from(counts.entries())
+      .map(([type, count]) => ({ type, count }))
+      .sort((a, b) => b.count - a.count);
+  },
 };
 
 function sortProperties(list: Property[], sort: PropertySort): Property[] {

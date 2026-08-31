@@ -3,6 +3,7 @@ import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { PropertyPrice } from "./property-price";
 import { PropertyStatusBadges } from "./property-status-badges";
+import { formatDate } from "@/lib/utils";
 import type { Property } from "@/types/property";
 
 /**
@@ -11,7 +12,13 @@ import type { Property } from "@/types/property";
  * Listed", area highlight rails) where the image should carry the section
  * rather than sitting inside a boxed card with a separate text block.
  */
-export function EditorialPropertyCard({ property }: { property: Property }) {
+export function EditorialPropertyCard({
+  property,
+  showListedDate = false,
+}: {
+  property: Property;
+  showListedDate?: boolean;
+}) {
   return (
     <Link
       href={`/properties/${property.slug}`}
@@ -42,6 +49,9 @@ export function EditorialPropertyCard({ property }: { property: Property }) {
           size="sm"
           className="mt-1.5 text-primary-foreground"
         />
+        {showListedDate && (
+          <p className="mt-1 text-[11px] text-primary-foreground/70">Listed {formatDate(property.listedAt)}</p>
+        )}
       </div>
     </Link>
   );

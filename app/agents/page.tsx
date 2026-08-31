@@ -3,7 +3,6 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { AgentCard } from "@/components/property/agent-card";
 import { agentService } from "@/services/agent.service";
-import { propertyService } from "@/services/property.service";
 
 export const metadata: Metadata = {
   title: "Our Agents",
@@ -11,14 +10,7 @@ export const metadata: Metadata = {
 };
 
 export default async function AgentsPage() {
-  const agents = await agentService.list();
-  const counts = await Promise.all(
-    agents.map(async (agent) => ({
-      id: agent.id,
-      count: (await propertyService.getByAgent(agent.id)).filter((p) => p.status === "Available").length,
-    }))
-  );
-  const countMap = Object.fromEntries(counts.map((c) => [c.id, c.count]));
+  const withCounts = await agentService.listWithActiveCounts();
 
   return (
     <>
@@ -31,8 +23,8 @@ export default async function AgentsPage() {
         </p>
 
         <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {agents.map((agent) => (
-            <AgentCard key={agent.id} agent={agent} listingCount={countMap[agent.id] ?? 0} />
+          {withCounts.map(({ agent, listingCount }) => (
+            <AgentCard key={agent.id} agent={agent} listingCount={listingCount} />
           ))}
         </div>
       </main>

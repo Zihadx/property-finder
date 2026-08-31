@@ -12,15 +12,9 @@ import { PropertyActionsRow } from "@/components/property/property-actions-row";
 import { AgentContactCard } from "@/components/property/agent-contact-card";
 import { MobileActionBar } from "@/components/property/mobile-action-bar";
 import { SimilarProperties } from "@/components/property/similar-properties";
+import { propertyStatusVariant } from "@/components/property/property-status";
 import { propertyService } from "@/services/property.service";
 import { agentService } from "@/services/agent.service";
-
-const statusVariant: Record<string, "success" | "danger" | "warning" | "neutral"> = {
-  Available: "success",
-  Sold: "danger",
-  Rented: "neutral",
-  "Under Offer": "warning",
-};
 
 export async function generateMetadata({
   params,
@@ -100,7 +94,7 @@ export default async function PropertyDetailPage({
             <div className="mt-8 flex items-start justify-between gap-4">
               <div>
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant={statusVariant[property.status]}>{property.status}</Badge>
+                  <Badge variant={propertyStatusVariant[property.status]}>{property.status}</Badge>
                   {property.featured && <Badge variant="accent">Featured</Badge>}
                   <Badge variant="outline">{property.type}</Badge>
                 </div>

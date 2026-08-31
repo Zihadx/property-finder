@@ -3,30 +3,23 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, useReducedMotion } from "motion/react";
-import { Bed, Bath, Ruler, Heart, MapPin, Eye, Scale } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { MapPin, Eye } from "lucide-react";
 import { PropertyPrice } from "./property-price";
+import { PropertyFacts } from "./property-facts";
+import { PropertyStatusBadges } from "./property-status-badges";
+import { PropertyFavoriteButton } from "./property-favorite-button";
+import { PropertyCompareButton } from "./property-compare-button";
 import { PropertyQuickView } from "./property-quick-view";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { toggleFavorite } from "@/redux/slices/favoritesSlice";
-import { addToCompare, removeFromCompare } from "@/redux/slices/compareSlice";
-import { cn } from "@/lib/utils";
 import type { Property } from "@/types/property";
 
-const statusVariant: Record<Property["status"], "success" | "danger" | "warning" | "neutral"> = {
-  Available: "success",
-  Sold: "danger",
-  Rented: "neutral",
-  "Under Offer": "warning",
-};
-
+/**
+ * Default grid card — the workhorse variant for search-result grids and
+ * similar-properties rails. Self-contained: save, compare, and quick view
+ * all live on the card itself. See ./index.ts for the other signature
+ * variants (Featured, Horizontal, Compact, Editorial, Map).
+ */
 export function PropertyCard({ property }: { property: Property }) {
-  const dispatch = useAppDispatch();
-  const isFavorite = useAppSelector((state) => state.favorites.propertyIds.includes(property.id));
-  const isComparing = useAppSelector((state) => state.compare.propertyIds.includes(property.id));
   const [quickViewOpen, setQuickViewOpen] = React.useState(false);
-  const reduceMotion = useReducedMotion();
 
   return (
     <article className="group relative flex flex-col overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface transition-shadow duration-200 hover:shadow-[var(--shadow-md)]">
@@ -39,9 +32,8 @@ export function PropertyCard({ property }: { property: Property }) {
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
           />
-          <div className="absolute left-3 top-3 flex gap-2">
-            <Badge variant={statusVariant[property.status]}>{property.status}</Badge>
-            {property.featured && <Badge variant="accent">Featured</Badge>}
+          <div className="absolute left-3 top-3">
+            <PropertyStatusBadges property={property} />
           </div>
           <button
             type="button"
@@ -58,36 +50,8 @@ export function PropertyCard({ property }: { property: Property }) {
       </Link>
 
       <div className="absolute right-3 top-3 flex flex-col gap-2">
-        <button
-          type="button"
-          aria-label={isFavorite ? "Remove from saved properties" : "Save property"}
-          aria-pressed={isFavorite}
-          onClick={() => dispatch(toggleFavorite(property.id))}
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 backdrop-blur-sm transition-colors hover:bg-surface"
-        >
-          <motion.span
-            key={isFavorite ? "on" : "off"}
-            initial={reduceMotion ? false : { scale: 0.6 }}
-            animate={{ scale: 1 }}
-            transition={{ type: "spring", stiffness: 500, damping: 15 }}
-            className="flex"
-          >
-            <Heart
-              className={cn("h-4 w-4 transition-colors", isFavorite ? "fill-danger text-danger" : "text-foreground")}
-            />
-          </motion.span>
-        </button>
-        <button
-          type="button"
-          aria-label={isComparing ? "Remove from comparison" : "Add to comparison"}
-          aria-pressed={isComparing}
-          onClick={() =>
-            dispatch(isComparing ? removeFromCompare(property.id) : addToCompare(property.id))
-          }
-          className="flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 backdrop-blur-sm transition-colors hover:bg-surface"
-        >
-          <Scale className={cn("h-4 w-4 transition-colors", isComparing ? "text-accent" : "text-foreground")} />
-        </button>
+        <PropertyFavoriteButton propertyId={property.id} />
+        <PropertyCompareButton propertyId={property.id} />
       </div>
 
       <div className="flex flex-1 flex-col gap-3 p-4">
@@ -105,24 +69,7 @@ export function PropertyCard({ property }: { property: Property }) {
 
         <PropertyPrice price={property.price} purpose={property.purpose} />
 
-        <div className="mt-1 flex items-center gap-4 border-t border-border pt-3 text-sm text-muted-foreground">
-          {property.bedrooms > 0 && (
-            <span className="flex items-center gap-1.5">
-              <Bed className="h-4 w-4" />
-              <span className="ledger-value">{property.bedrooms}</span>
-            </span>
-          )}
-          {property.bathrooms > 0 && (
-            <span className="flex items-center gap-1.5">
-              <Bath className="h-4 w-4" />
-              <span className="ledger-value">{property.bathrooms}</span>
-            </span>
-          )}
-          <span className="flex items-center gap-1.5">
-            <Ruler className="h-4 w-4" />
-            <span className="ledger-value">{property.areaSqft.toLocaleString("en-BD")}</span> sqft
-          </span>
-        </div>
+        <PropertyFacts property={property} className="mt-1 border-t border-border pt-3" />
       </div>
 
       <PropertyQuickView property={property} open={quickViewOpen} onClose={() => setQuickViewOpen(false)} />

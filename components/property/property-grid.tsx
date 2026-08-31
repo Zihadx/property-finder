@@ -3,7 +3,7 @@
 import { motion, useReducedMotion } from "motion/react";
 import { SearchX } from "lucide-react";
 import { PropertyCard } from "./property-card";
-import { PropertyListItem } from "./property-list-item";
+import { HorizontalPropertyCard } from "./horizontal-property-card";
 import { EmptyState } from "@/components/ui/empty-state";
 import type { Property } from "@/types/property";
 
@@ -37,7 +37,7 @@ export function PropertyGrid({ properties, view }: { properties: Property[]; vie
       <div className="flex flex-col gap-4">
         {properties.map((property, index) => (
           <motion.div key={property.id} {...itemAnimation(index)}>
-            <PropertyListItem property={property} />
+            <HorizontalPropertyCard property={property} />
           </motion.div>
         ))}
       </div>

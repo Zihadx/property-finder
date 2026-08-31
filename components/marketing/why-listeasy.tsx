@@ -98,12 +98,12 @@ export function WhyListEasy() {
                   </div>
 
                   {/* Heading */}
-                  <h3 className="mt-7 max-w-[15rem] font-display text-[1.05rem] leading-[1.25] tracking-tight text-foreground">
+                  <h3 className="mt-7 max-w-60 font-display text-[1.05rem] leading-tight tracking-tight text-foreground">
                     {point.title}
                   </h3>
 
                   {/* Description */}
-                  <p className="mt-3 max-w-[17rem] text-[0.76rem] leading-[1.7] text-muted-foreground">
+                  <p className="mt-3 max-w-68 text-[0.76rem] leading-[1.7] text-muted-foreground">
                     {point.description}
                   </p>
 

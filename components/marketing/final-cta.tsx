@@ -1,15 +1,9 @@
-
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
-import {
-  motion,
-  useScroll,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { motion, useScroll, useSpring, useTransform } from "framer-motion";
 import { useRef } from "react";
 
 export function FinalCta() {
@@ -36,11 +30,7 @@ export function FinalCta() {
    * Large overscan + restrained movement = cinematic parallax
    * without looking like a gimmick.
    */
-  const imageY = useTransform(
-    smoothProgress,
-    [0, 0.5, 1],
-    ["-7%", "0%", "7%"],
-  );
+  const imageY = useTransform(smoothProgress, [0, 0.5, 1], ["-7%", "0%", "7%"]);
 
   const imageScale = useTransform(
     smoothProgress,
@@ -48,11 +38,7 @@ export function FinalCta() {
     [1.1, 1.045, 1.1],
   );
 
-  const imageX = useTransform(
-    smoothProgress,
-    [0, 0.5, 1],
-    ["-1%", "0%", "1%"],
-  );
+  const imageX = useTransform(smoothProgress, [0, 0.5, 1], ["-1%", "0%", "1%"]);
 
   /*
    * Very subtle image rotation creates depth.
@@ -84,11 +70,8 @@ export function FinalCta() {
   );
 
   return (
-    <section
-      ref={sectionRef}
-      className="relative overflow-hidden"
-    >
-      <div className="relative min-h-[34rem] w-full overflow-hidden sm:min-h-[38rem] lg:min-h-[44rem]">
+    <section ref={sectionRef} className="relative overflow-hidden">
+      <div className="relative min-h-136 w-full overflow-hidden sm:min-h-152 lg:min-h-176">
         {/* =========================================================
             PARALLAX PHOTOGRAPHY
         ========================================================== */}
@@ -100,7 +83,7 @@ export function FinalCta() {
             scale: imageScale,
             rotate: imageRotate,
           }}
-          className="absolute -inset-[8%] will-change-transform"
+          className="absolute inset-[-8%] will-change-transform"
         >
           <Image
             src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2400&q=90"
@@ -119,19 +102,19 @@ export function FinalCta() {
         <div className="absolute inset-0 bg-black/8" />
 
         {/* Bottom cinematic depth */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-black/5" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/35 to-black/5" />
 
         {/* Left-to-right editorial shadow */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-linear-to-r from-black/40 via-black/10 to-transparent" />
 
         {/* Soft center illumination */}
         <motion.div
           style={{ opacity: glowOpacity }}
-          className="absolute inset-0 bg-[radial-gradient(circle_at_55%_40%,rgba(255,255,255,0.18),transparent_48%)]"
+          className="absolute inset-0 bg-[radial-linear(circle_at_55%_40%,rgba(255,255,255,0.18),transparent_48%)]"
         />
 
         {/* Subtle edge vignette */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_45%,rgba(0,0,0,0.28)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-linear(circle_at_center,transparent_45%,rgba(0,0,0,0.28)_100%)]" />
 
         {/* =========================================================
             EDITORIAL FRAME
@@ -150,7 +133,7 @@ export function FinalCta() {
 
         <motion.div
           style={{ y: contentY }}
-          className="relative z-10 flex min-h-[34rem] items-end sm:min-h-[38rem] lg:min-h-[44rem]"
+          className="relative z-10 flex min-h-136 items-end sm:min-h-152 lg:min-h-176"
         >
           <div className="container mx-auto px-6 pb-8 sm:pb-10 lg:pb-14">
             <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
@@ -194,9 +177,7 @@ export function FinalCta() {
                 >
                   Find somewhere
                   <br />
-                  <span className="text-white/55">
-                    worth coming home to.
-                  </span>
+                  <span className="text-white/55">worth coming home to.</span>
                 </motion.h2>
               </div>
 
@@ -217,7 +198,6 @@ export function FinalCta() {
                   className="group/link inline-flex items-center gap-3 border-b border-white/50 pb-2 text-xs font-medium uppercase tracking-[0.16em] text-white transition-all duration-500 hover:border-white"
                 >
                   Explore properties
-
                   <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-500 ease-out group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
                 </Link>
 
@@ -257,4 +237,3 @@ export function FinalCta() {
     </section>
   );
 }
-

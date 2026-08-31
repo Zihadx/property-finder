@@ -1,7 +1,7 @@
 
 "use client";
 
-import * as React from "react";
+
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowUpRight, Heart, Scale } from "lucide-react";
@@ -13,7 +13,6 @@ import {
   PropertyCompareButton,
 } from "@/components/property";
 import { Button } from "@/components/ui/button";
-import { SectionHeading } from "./section-heading";
 import type { Property } from "@/types/property";
 
 const reveal = {
@@ -179,7 +178,7 @@ export function ShortlistPreviewClient({
               </div>
 
               <div className="mt-3 flex items-baseline gap-1">
-                <span className="font-mono text-4xl font-medium tracking-[-0.05em] text-foreground">
+                <span className="font-mono text-4xl font-medium tracking-tighter text-foreground">
                   {comparingCount}
                 </span>
 
@@ -188,7 +187,7 @@ export function ShortlistPreviewClient({
                 </span>
               </div>
 
-              <p className="mt-2 max-w-[180px] text-xs leading-5 text-muted-foreground">
+              <p className="mt-2 max-w-45 text-xs leading-5 text-muted-foreground">
                 {comparingCount > 0
                   ? "Your comparison is ready."
                   : "Select up to three properties."}

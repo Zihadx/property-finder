@@ -66,7 +66,7 @@ export async function PropertyCategories() {
         className="
           pointer-events-none absolute
           -right-40 top-10
-          h-[500px] w-[500px]
+          h-125 w-125
           rounded-full
          
           blur-[140px]
@@ -78,7 +78,7 @@ export async function PropertyCategories() {
         className="
           pointer-events-none absolute
           -left-48 bottom-0
-          h-[400px] w-[400px]
+          h-100 w-100
           rounded-full
    
           blur-[120px]

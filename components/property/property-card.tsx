@@ -92,7 +92,7 @@ export function PropertyCard({ property }: { property: Property }) {
             viewport={{ once: true, amount: 0.3 }}
             className="
               relative
-              aspect-[4/3]
+              aspect-4/3
               overflow-hidden
               bg-surface-muted
             "
@@ -111,7 +111,7 @@ export function PropertyCard({ property }: { property: Property }) {
                 className="
                   object-cover
                   transition-transform
-                  duration-[1400ms]
+                  duration-1400
                   ease-[cubic-bezier(0.22,1,0.36,1)]
                   group-hover:scale-[1.055]
                 "
@@ -127,7 +127,7 @@ export function PropertyCard({ property }: { property: Property }) {
               className="
                 pointer-events-none
                 absolute inset-0
-                bg-gradient-to-t
+                bg-linear-to-t
                 from-black/70
                 via-black/10
                 to-black/5
@@ -140,8 +140,8 @@ export function PropertyCard({ property }: { property: Property }) {
               className="
                 pointer-events-none
                 absolute inset-0
-                bg-gradient-to-br
-                from-white/[0.1]
+                bg-linear-to-br
+                from-white/10
                 via-transparent
                 to-transparent
               "

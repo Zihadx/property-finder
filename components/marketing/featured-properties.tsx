@@ -1,14 +1,9 @@
-
 import Link from "next/link";
 import { ArrowUpRight, Sparkles } from "lucide-react";
 
 import { propertyService } from "@/services/property.service";
 import { agentService } from "@/services/agent.service";
-import {
-  PropertyCard,
-  FeaturedPropertyCard,
-} from "@/components/property";
-import { SectionHeading } from "./section-heading";
+import { PropertyCard, FeaturedPropertyCard } from "@/components/property";
 import { Button } from "@/components/ui/button";
 
 /**
@@ -39,7 +34,7 @@ export async function FeaturedProperties() {
         className="
           pointer-events-none
           absolute right-0 top-0
-          h-[420px] w-[420px]
+          h-105 w-105
           translate-x-1/3
           -translate-y-1/3
           rounded-full
@@ -54,7 +49,7 @@ export async function FeaturedProperties() {
           pointer-events-none
           absolute left-0 top-[45%]
           h-px w-full
-          bg-gradient-to-r
+          bg-linear-to-r
           from-transparent
           via-border/60
           to-transparent
@@ -70,10 +65,7 @@ export async function FeaturedProperties() {
           <div className="max-w-3xl">
             {/* Editorial eyebrow */}
             <div className="mb-5 flex items-center gap-3">
-              <span
-                aria-hidden="true"
-                className="h-px w-10 bg-accent-strong"
-              />
+              <span aria-hidden="true" className="h-px w-10 bg-accent-strong" />
 
               <span
                 className="
@@ -101,9 +93,7 @@ export async function FeaturedProperties() {
             >
               Properties worth
               <br />
-              <span className="text-muted-foreground/45">
-                looking twice.
-              </span>
+              <span className="text-muted-foreground/45">looking twice.</span>
             </h2>
 
             <p
@@ -116,9 +106,9 @@ export async function FeaturedProperties() {
                 md:text-[15px]
               "
             >
-              A considered selection of distinctive residences,
-              investment opportunities, and developments currently
-              receiving our closest attention.
+              A considered selection of distinctive residences, investment
+              opportunities, and developments currently receiving our closest
+              attention.
             </p>
           </div>
 
@@ -152,7 +142,6 @@ export async function FeaturedProperties() {
             >
               <Link href="/properties?featured=true">
                 View all featured
-
                 <span
                   className="
                     ml-3
@@ -205,10 +194,7 @@ export async function FeaturedProperties() {
 
           {/* Main feature */}
           <div className="relative overflow-hidden">
-            <FeaturedPropertyCard
-              property={signature}
-              agent={agent}
-            />
+            <FeaturedPropertyCard property={signature} agent={agent} />
           </div>
         </div>
 
@@ -236,10 +222,7 @@ export async function FeaturedProperties() {
             {/* Supporting cards */}
             <div className="grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
               {supporting.map((property, index) => (
-                <div
-                  key={property.id}
-                  className="group relative"
-                >
+                <div key={property.id} className="group relative">
                   {/* Editorial index */}
                   <div
                     className="
@@ -270,9 +253,8 @@ export async function FeaturedProperties() {
         <div className="mt-20 border-t border-border pt-8 md:mt-28">
           <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
             <p className="max-w-lg text-[11px] leading-5 text-muted-foreground">
-              We dont believe in listing everything.
-              We believe in presenting the right properties,
-              with the right context, at the right time.
+              We dont believe in listing everything. We believe in presenting
+              the right properties, with the right context, at the right time.
             </p>
 
             <Link
@@ -289,7 +271,6 @@ export async function FeaturedProperties() {
               "
             >
               Explore the full catalog
-
               <ArrowUpRight
                 className="
                   ml-3
@@ -306,4 +287,3 @@ export async function FeaturedProperties() {
     </section>
   );
 }
-

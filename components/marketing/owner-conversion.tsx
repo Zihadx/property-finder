@@ -72,7 +72,7 @@ export function OwnerConversion() {
         aria-hidden
         className="pointer-events-none absolute inset-0"
       >
-        <div className="absolute -right-32 -top-40 h-112 w-112 rounded-full bg-primary-foreground/5 blur-3xl" />
+        <div className="absolute -right-32 -top-40 h-112 w-md rounded-full bg-primary-foreground/5 blur-3xl" />
         <div className="absolute -bottom-40 -left-32 h-96 w-96 rounded-full bg-accent/10 blur-3xl" />
 
     
@@ -151,7 +151,7 @@ export function OwnerConversion() {
                 className="group relative min-h-40 border-b border-r border-primary-foreground/10 p-5 transition-colors duration-300 hover:bg-primary-foreground/[0.035] sm:min-h-44 sm:p-6"
               >
                 <div className="flex items-start justify-between">
-                  <div className="flex size-8 items-center justify-center border border-primary-foreground/12 bg-primary-foreground/[0.025]">
+                  <div className="flex size-8 items-center justify-center border border-primary-foreground/12 bg-primary-foreground/2.5">
                     <Icon className="size-3.5 text-primary-foreground/60 transition-colors duration-300 group-hover:text-accent" />
                   </div>
 

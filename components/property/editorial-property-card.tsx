@@ -39,7 +39,7 @@ export function EditorialPropertyCard({
         onDragStart={(event) => event.preventDefault()}
         className="
     group relative block
-    aspect-[3/4]
+    aspect-3/4
     w-60
     shrink-0
     overflow-hidden
@@ -74,7 +74,7 @@ export function EditorialPropertyCard({
           aria-hidden="true"
           className="
             absolute inset-0
-            bg-gradient-to-b
+            bg-linear-to-b
             from-black/10
             via-black/0
             to-black/85
@@ -89,7 +89,7 @@ export function EditorialPropertyCard({
           aria-hidden="true"
           className="
             absolute inset-x-0 top-0 h-32
-            bg-gradient-to-b from-white/10 to-transparent
+            bg-linear-to-b from-white/10 to-transparent
             opacity-70
           "
         />
@@ -179,7 +179,7 @@ export function EditorialPropertyCard({
           aria-hidden="true"
           className="
             absolute inset-x-0 bottom-0 h-px
-            bg-gradient-to-r
+            bg-linear-to-r
             from-transparent
             via-white/30
             to-transparent

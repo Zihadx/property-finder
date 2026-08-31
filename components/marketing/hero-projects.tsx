@@ -40,7 +40,6 @@ const projects = [
   },
 ];
 
-
 export function HeroProjects() {
   const [active, setActive] = useState(2);
   const reduceMotion = useReducedMotion();
@@ -97,8 +96,8 @@ export function HeroProjects() {
                       {/* Image darkness */}
                       <div className="absolute inset-0 bg-black/25 transition-colors duration-500 group-hover:bg-black/10" />
 
-                      {/* Bottom gradient */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
+                      {/* Bottom linear */}
+                      <div className="absolute inset-0 bg-linear-to-t from-black/85 via-black/20 to-transparent" />
 
                       {/* Active border */}
                       <motion.div

@@ -81,7 +81,7 @@ export function PropertyRail({
       className={cn(
         "flex gap-3 overflow-x-auto pb-4 select-none",
         "touch-pan-x overscroll-x-contain",
-        "[scrollbar-width:none]",
+        "scrollbar-none",
         "[-ms-overflow-style:none]",
         "[&::-webkit-scrollbar]:hidden",
         "sm:gap-4",

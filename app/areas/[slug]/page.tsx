@@ -37,7 +37,11 @@ export default async function AreaDetailPage({
   if (!area) notFound();
 
   const properties = await propertyService.getByArea(slug);
-  const areaAgents = agents.filter((a) => a.areasServed.some((served) => served.toLowerCase().includes(area.name.toLowerCase())));
+  const areaAgents = agents.filter((a) =>
+    a.areasServed.some((served) =>
+      served.toLowerCase().includes(area.name.toLowerCase()),
+    ),
+  );
 
   const faqs = [
     {
@@ -59,8 +63,15 @@ export default async function AreaDetailPage({
       <SiteHeader />
       <main>
         <section className="relative h-64 w-full overflow-hidden sm:h-80">
-          <Image src={area.image} alt={area.name} fill sizes="100vw" className="object-cover" priority />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <Image
+            src={area.image}
+            alt={area.name}
+            fill
+            sizes="100vw"
+            className="object-cover"
+            priority
+          />
+          <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-6 pb-8">
             <p className="ledger-label mb-2 text-white/80">Area Guide</p>
             <h1 className="font-display text-4xl text-white">{area.name}</h1>
@@ -68,25 +79,35 @@ export default async function AreaDetailPage({
         </section>
 
         <div className="mx-auto max-w-7xl px-6 py-10">
-          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">{area.description}</p>
+          <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
+            {area.description}
+          </p>
 
           <dl className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-[var(--radius-md)] border border-border bg-border sm:grid-cols-3">
             <div className="bg-surface p-4">
               <dt className="ledger-label">Avg. Price / sqft</dt>
-              <dd className="ledger-value mt-1.5 text-xl text-foreground">{formatBDT(area.averagePricePerSqft)}</dd>
+              <dd className="ledger-value mt-1.5 text-xl text-foreground">
+                {formatBDT(area.averagePricePerSqft)}
+              </dd>
             </div>
             <div className="bg-surface p-4">
               <dt className="ledger-label">Active Listings</dt>
-              <dd className="ledger-value mt-1.5 text-xl text-foreground">{properties.length}</dd>
+              <dd className="ledger-value mt-1.5 text-xl text-foreground">
+                {properties.length}
+              </dd>
             </div>
             <div className="bg-surface p-4">
               <dt className="ledger-label">Local Agents</dt>
-              <dd className="ledger-value mt-1.5 text-xl text-foreground">{areaAgents.length}</dd>
+              <dd className="ledger-value mt-1.5 text-xl text-foreground">
+                {areaAgents.length}
+              </dd>
             </div>
           </dl>
 
           <div className="mt-14 flex items-center justify-between">
-            <h2 className="font-display text-2xl text-foreground">Properties in {area.name}</h2>
+            <h2 className="font-display text-2xl text-foreground">
+              Properties in {area.name}
+            </h2>
             <Button variant="link" asChild>
               <Link href={`/properties?area=${area.slug}`}>View all →</Link>
             </Button>
@@ -97,29 +118,44 @@ export default async function AreaDetailPage({
 
           {areaAgents.length > 0 && (
             <div className="mt-14">
-              <h2 className="font-display text-2xl text-foreground">Agents serving {area.name}</h2>
+              <h2 className="font-display text-2xl text-foreground">
+                Agents serving {area.name}
+              </h2>
               <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 {areaAgents.map((agent) => (
-                  <AgentCard key={agent.id} agent={agent} listingCount={properties.filter((p) => p.agentId === agent.id).length} />
+                  <AgentCard
+                    key={agent.id}
+                    agent={agent}
+                    listingCount={
+                      properties.filter((p) => p.agentId === agent.id).length
+                    }
+                  />
                 ))}
               </div>
             </div>
           )}
 
           <div className="mt-14 max-w-2xl">
-            <h2 className="font-display text-2xl text-foreground">Frequently asked questions</h2>
+            <h2 className="font-display text-2xl text-foreground">
+              Frequently asked questions
+            </h2>
             <div className="mt-6">
               <FaqAccordion items={faqs} />
             </div>
           </div>
 
           <div className="mt-14 flex flex-col items-center gap-4 rounded-[var(--radius-md)] border border-border bg-surface-muted px-6 py-12 text-center">
-            <h2 className="font-display text-2xl text-foreground">Looking in {area.name}?</h2>
+            <h2 className="font-display text-2xl text-foreground">
+              Looking in {area.name}?
+            </h2>
             <p className="max-w-md text-sm text-muted-foreground">
-              Browse every active listing in the area, or talk to a local agent directly.
+              Browse every active listing in the area, or talk to a local agent
+              directly.
             </p>
             <Button asChild>
-              <Link href={`/properties?area=${area.slug}`}>Browse {area.name} Properties</Link>
+              <Link href={`/properties?area=${area.slug}`}>
+                Browse {area.name} Properties
+              </Link>
             </Button>
           </div>
         </div>

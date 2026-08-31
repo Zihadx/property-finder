@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -70,7 +69,7 @@ export function AreaCard({
           "hover:-translate-y-1",
           "hover:border-white/[0.28]",
           "hover:shadow-[0_30px_90px_rgba(0,0,0,0.38)]",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50",
         )}
       >
         {/* Image */}
@@ -88,19 +87,19 @@ export function AreaCard({
             "object-cover",
             "transition-transform duration-[1400ms]",
             "ease-[cubic-bezier(0.22,1,0.36,1)]",
-            "group-hover:scale-[1.075]"
+            "group-hover:scale-[1.075]",
           )}
         />
 
         {/* Cinematic image treatment */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-b from-black/[0.05] via-black/[0.08] to-black/[0.88]"
+          className="absolute inset-0 bg-linear-to-b from-black/[0.05] via-black/[0.08] to-black/[0.88]"
         />
 
         <div
           aria-hidden="true"
-          className="absolute inset-0 bg-gradient-to-r from-black/[0.28] via-transparent to-transparent"
+          className="absolute inset-0 bg-linear-to-r from-black/[0.28] via-transparent to-transparent"
         />
 
         {/* Subtle premium vignette */}
@@ -133,14 +132,14 @@ export function AreaCard({
         <div
           className={cn(
             "absolute inset-x-0 bottom-0",
-            isLarge ? "p-6 sm:p-8" : "p-4 sm:p-5"
+            isLarge ? "p-6 sm:p-8" : "p-4 sm:p-5",
           )}
         >
           {/* Small label */}
           <p
             className={cn(
               "mb-2 font-medium uppercase tracking-[0.2em] text-white/45",
-              isLarge ? "text-[10px]" : "text-[8px]"
+              isLarge ? "text-[10px]" : "text-[8px]",
             )}
           >
             {area.propertyCount} residences
@@ -152,7 +151,7 @@ export function AreaCard({
               "font-display font-normal leading-[0.95] tracking-[-0.035em] text-white",
               isLarge
                 ? "text-3xl sm:text-4xl lg:text-5xl"
-                : "text-xl sm:text-2xl"
+                : "text-xl sm:text-2xl",
             )}
           >
             {area.name}
@@ -162,7 +161,7 @@ export function AreaCard({
           <div
             className={cn(
               "mt-4 flex items-center gap-3",
-              isLarge ? "text-sm" : "text-[11px]"
+              isLarge ? "text-sm" : "text-[11px]",
             )}
           >
             <span className="h-px w-5 bg-white/30" />
@@ -202,4 +201,3 @@ export function AreaCard({
     </motion.div>
   );
 }
-

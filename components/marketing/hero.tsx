@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { ArrowUpRight, ChevronDown, MapPin, Sparkles } from "lucide-react";
 import { HeroProjects } from "./hero-projects";
@@ -24,19 +23,16 @@ export function Hero() {
       </video>
 
       {/* Cinematic color treatment */}
+      <div aria-hidden="true" className="absolute inset-0 bg-[#06152b]/45" />
+
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-[#06152b]/45"
+        className="absolute inset-0 bg-linear-to-b from-[#020914]/50 via-transparent to-[#020914]/95"
       />
 
       <div
         aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-b from-[#020914]/50 via-transparent to-[#020914]/95"
-      />
-
-      <div
-        aria-hidden="true"
-        className="absolute inset-0 bg-gradient-to-r from-[#020914]/80 via-[#06152b]/20 to-transparent"
+        className="absolute inset-0 bg-linear-to-r from-[#020914]/80 via-[#06152b]/20 to-transparent"
       />
 
       {/* Subtle cinematic grain */}
@@ -101,10 +97,7 @@ export function Hero() {
           <div className="max-w-5xl">
             {/* Eyebrow */}
             <div className="flex items-center gap-4">
-              <span
-                aria-hidden="true"
-                className="h-px w-12 bg-white/60"
-              />
+              <span aria-hidden="true" className="h-px w-12 bg-white/60" />
 
               <span className="text-[9px] font-medium uppercase tracking-[0.34em] text-white/65">
                 Premium real estate · Bangladesh
@@ -115,20 +108,16 @@ export function Hero() {
             <h1 className="mt-7 max-w-5xl font-display text-[clamp(4rem,8.8vw,9rem)] font-normal leading-[0.82] tracking-[-0.07em]">
               Find your
               <br />
-
               <span className="text-white/35">next</span>{" "}
-
-              <em className="font-normal not-italic text-white">
-                address.
-              </em>
+              <em className="font-normal not-italic text-white">address.</em>
             </h1>
 
             {/* Supporting content */}
             <div className="mt-9 flex flex-col gap-8 sm:flex-row sm:items-end sm:gap-14">
               <p className="max-w-md text-[13px] leading-6 text-white/60 sm:text-sm">
-                Discover distinctive residences, investment opportunities,
-                and landmark developments across Dhaka — thoughtfully
-                curated in one trusted collection.
+                Discover distinctive residences, investment opportunities, and
+                landmark developments across Dhaka — thoughtfully curated in one
+                trusted collection.
               </p>
 
               {/* Mini trust statement */}
@@ -149,7 +138,6 @@ export function Hero() {
                 className="group inline-flex h-13 items-center bg-white px-7 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#071321] transition-all duration-500 hover:bg-white/90"
               >
                 Explore Properties
-
                 <span className="ml-8 flex h-7 w-7 items-center justify-center border border-[#071321]/15 transition-all duration-500 group-hover:translate-x-1 group-hover:border-[#071321]/30">
                   <ArrowUpRight className="h-3.5 w-3.5" />
                 </span>
@@ -183,9 +171,7 @@ export function Hero() {
 
           <div className="mt-3 flex items-end gap-5">
             <div>
-              <p className="font-display text-2xl tracking-[-0.04em]">
-                Dhaka
-              </p>
+              <p className="font-display text-2xl tracking-[-0.04em]">Dhaka</p>
               <p className="mt-1 text-[8px] uppercase tracking-[0.2em] text-white/40">
                 Metropolitan Area
               </p>
@@ -194,9 +180,7 @@ export function Hero() {
             <div className="h-8 w-px bg-white/15" />
 
             <div>
-              <p className="font-display text-2xl tracking-[-0.04em]">
-                150+
-              </p>
+              <p className="font-display text-2xl tracking-[-0.04em]">150+</p>
               <p className="mt-1 text-[8px] uppercase tracking-[0.2em] text-white/40">
                 Listings
               </p>
@@ -211,13 +195,11 @@ export function Hero() {
 
       <HeroProjects />
 
-    
       {/* Vertical editorial line */}
       <div
         aria-hidden="true"
-        className="absolute bottom-0 right-8 top-24 hidden w-px bg-gradient-to-b from-transparent via-white/10 to-transparent xl:block"
+        className="absolute bottom-0 right-8 top-24 hidden w-px bg-linear-to-b from-transparent via-white/10 to-transparent xl:block"
       />
     </section>
   );
 }
-

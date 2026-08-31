@@ -1,3 +1,4 @@
+
 import type { Property } from "@/types/property";
 
 export const properties: Property[] = [
@@ -23,15 +24,27 @@ export const properties: Property[] = [
     floor: "7th",
     totalFloors: 12,
     parking: 2,
-    amenities: ["Generator Backup", "Lift", "Gym", "Swimming Pool", "24/7 Security", "Rooftop Garden"],
+    amenities: [
+      "Generator Backup",
+      "Lift",
+      "Gym",
+      "Swimming Pool",
+      "24/7 Security",
+      "Rooftop Garden",
+    ],
     description:
       "A full-floor apartment in one of Gulshan 2's most sought-after towers, finished with imported tiles and a wraparound balcony overlooking the lake.",
-    images: ["https://picsum.photos/seed/prp-001-1/1200/900", "https://picsum.photos/seed/prp-001-2/1200/900", "https://picsum.photos/seed/prp-001-3/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-001",
     listedAt: "2026-06-12",
     views: 412,
     inquiries: 9,
   },
+
   {
     id: "prp-002",
     slug: "banani-11-modern-duplex",
@@ -54,15 +67,24 @@ export const properties: Property[] = [
     floor: "5th–6th",
     totalFloors: 8,
     parking: 1,
-    amenities: ["Lift", "Generator Backup", "24/7 Security", "Community Hall"],
+    amenities: [
+      "Lift",
+      "Generator Backup",
+      "24/7 Security",
+      "Community Hall",
+    ],
     description:
       "Two connected floors with a private internal staircase, ideal for a joint family. Recently renovated kitchen and bathrooms.",
-    images: ["https://picsum.photos/seed/prp-002-1/1200/900", "https://picsum.photos/seed/prp-002-2/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-001",
     listedAt: "2026-07-03",
     views: 268,
     inquiries: 6,
   },
+
   {
     id: "prp-003",
     slug: "bashundhara-block-c-family-flat",
@@ -85,15 +107,24 @@ export const properties: Property[] = [
     floor: "4th",
     totalFloors: 6,
     parking: 1,
-    amenities: ["Lift", "Generator Backup", "Mosque Nearby", "Playground"],
+    amenities: [
+      "Lift",
+      "Generator Backup",
+      "Mosque Nearby",
+      "Playground",
+    ],
     description:
       "A bright, well-ventilated apartment on a corner plot with cross-ventilation in every room, close to North South University.",
-    images: ["https://picsum.photos/seed/prp-003-1/1200/900", "https://picsum.photos/seed/prp-003-2/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-003",
     listedAt: "2026-05-28",
     views: 189,
     inquiries: 4,
   },
+
   {
     id: "prp-004",
     slug: "dhanmondi-8a-lakeview",
@@ -119,12 +150,16 @@ export const properties: Property[] = [
     amenities: ["Lift", "Lake View", "Generator Backup"],
     description:
       "A calm apartment overlooking Dhanmondi Lake, walking distance to the walkway and several established schools.",
-    images: ["https://picsum.photos/seed/prp-004-1/1200/900", "https://picsum.photos/seed/prp-004-2/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1600566753051-9d4d4f5e8d9c?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-002",
     listedAt: "2026-07-20",
     views: 301,
     inquiries: 11,
   },
+
   {
     id: "prp-005",
     slug: "uttara-sector-11-new-build",
@@ -150,12 +185,16 @@ export const properties: Property[] = [
     amenities: ["Lift", "Generator Backup", "24/7 Security"],
     description:
       "Never-occupied unit in a newly handed-over building, close to the Uttara metro station and Rajlokkhi School.",
-    images: ["https://picsum.photos/seed/prp-005-1/1200/900", "https://picsum.photos/seed/prp-005-2/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-003",
     listedAt: "2026-08-01",
     views: 154,
     inquiries: 3,
   },
+
   {
     id: "prp-006",
     slug: "mirpur-12-value-flat",
@@ -181,12 +220,15 @@ export const properties: Property[] = [
     amenities: ["Generator Backup", "Mosque Nearby"],
     description:
       "A well-priced flat in a settled family neighborhood, close to Mirpur 12 metro station and local markets.",
-    images: ["https://picsum.photos/seed/prp-006-1/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1600607688960-e095ff83135c?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-004",
     listedAt: "2026-04-15",
     views: 220,
     inquiries: 5,
   },
+
   {
     id: "prp-007",
     slug: "baridhara-diplomatic-penthouse",
@@ -209,15 +251,26 @@ export const properties: Property[] = [
     floor: "Penthouse",
     totalFloors: 10,
     parking: 3,
-    amenities: ["Private Terrace", "Swimming Pool", "Gym", "24/7 Security", "Concierge"],
+    amenities: [
+      "Private Terrace",
+      "Swimming Pool",
+      "Gym",
+      "24/7 Security",
+      "Concierge",
+    ],
     description:
       "A furnished penthouse with a private rooftop terrace, suited to embassy staff and senior executives.",
-    images: ["https://picsum.photos/seed/prp-007-1/1200/900", "https://picsum.photos/seed/prp-007-2/1200/900", "https://picsum.photos/seed/prp-007-3/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-001",
     listedAt: "2026-06-30",
     views: 389,
     inquiries: 8,
   },
+
   {
     id: "prp-008",
     slug: "purbachal-300-feet-plot",
@@ -241,12 +294,15 @@ export const properties: Property[] = [
     amenities: ["Gas Line Approved", "Corner Plot"],
     description:
       "A corner plot in an approved sector, ideal for a custom family home or future resale as the corridor develops.",
-    images: ["https://picsum.photos/seed/prp-008-1/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-003",
     listedAt: "2026-05-05",
     views: 132,
     inquiries: 2,
   },
+
   {
     id: "prp-009",
     slug: "gulshan-avenue-commercial-space",
@@ -269,15 +325,23 @@ export const properties: Property[] = [
     floor: "Ground",
     totalFloors: 6,
     parking: 2,
-    amenities: ["High Street Frontage", "Generator Backup", "24/7 Security"],
+    amenities: [
+      "High Street Frontage",
+      "Generator Backup",
+      "24/7 Security",
+    ],
     description:
       "A high-visibility ground-floor unit on Gulshan Avenue, suited to a flagship retail or F&B concept.",
-    images: ["https://picsum.photos/seed/prp-009-1/1200/900", "https://picsum.photos/seed/prp-009-2/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-001",
     listedAt: "2026-07-11",
     views: 176,
     inquiries: 4,
   },
+
   {
     id: "prp-010",
     slug: "badda-satarkul-mid-rise",
@@ -301,13 +365,17 @@ export const properties: Property[] = [
     totalFloors: 6,
     parking: 1,
     amenities: ["Lift", "Generator Backup"],
-    description: "A practical family flat near Pragati Sarani, popular with young families relocating from Rampura.",
-    images: ["https://picsum.photos/seed/prp-010-1/1200/900"],
+    description:
+      "A practical family flat near Pragati Sarani, popular with young families relocating from Rampura.",
+    images: [
+      "https://images.unsplash.com/photo-1600585154363-67eb9e2e2099?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-004",
     listedAt: "2026-06-18",
     views: 98,
     inquiries: 2,
   },
+
   {
     id: "prp-011",
     slug: "mohammadpur-shyamoli-flat",
@@ -331,13 +399,17 @@ export const properties: Property[] = [
     totalFloors: 5,
     parking: 0,
     amenities: ["Generator Backup", "Mosque Nearby"],
-    description: "A recently repainted, tenant-vacant flat close to Shyamoli Square and public transport links.",
-    images: ["https://picsum.photos/seed/prp-011-1/1200/900"],
+    description:
+      "A recently repainted, tenant-vacant flat close to Shyamoli Square and public transport links.",
+    images: [
+      "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-002",
     listedAt: "2026-04-29",
     views: 143,
     inquiries: 3,
   },
+
   {
     id: "prp-012",
     slug: "niketan-garden-facing-flat",
@@ -361,13 +433,17 @@ export const properties: Property[] = [
     totalFloors: 4,
     parking: 1,
     amenities: ["Generator Backup", "Quiet Street"],
-    description: "A quiet two-bedroom unit on a low-traffic Niketan street, close to Gulshan-1 circle.",
-    images: ["https://picsum.photos/seed/prp-012-1/1200/900"],
+    description:
+      "A quiet two-bedroom unit on a low-traffic Niketan street, close to Gulshan-1 circle.",
+    images: [
+      "https://images.unsplash.com/photo-1600566753051-9d4d4f5e8d9c?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-001",
     listedAt: "2026-07-25",
     views: 87,
     inquiries: 1,
   },
+
   {
     id: "prp-013",
     slug: "khilgaon-taltola-flat",
@@ -391,13 +467,17 @@ export const properties: Property[] = [
     totalFloors: 5,
     parking: 0,
     amenities: ["Generator Backup"],
-    description: "An entry-level flat suited to a small family or first-time buyer, near Khilgaon Taltola market.",
-    images: ["https://picsum.photos/seed/prp-013-1/1200/900"],
+    description:
+      "An entry-level flat suited to a small family or first-time buyer, near Khilgaon Taltola market.",
+    images: [
+      "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-004",
     listedAt: "2026-03-22",
     views: 76,
     inquiries: 1,
   },
+
   {
     id: "prp-014",
     slug: "rampura-banasree-office",
@@ -421,13 +501,17 @@ export const properties: Property[] = [
     totalFloors: 8,
     parking: 0,
     amenities: ["Lift", "Generator Backup"],
-    description: "A compact office suite suited to a small team, in a commercial building with reliable backup power.",
-    images: ["https://picsum.photos/seed/prp-014-1/1200/900"],
+    description:
+      "A compact office suite suited to a small team, in a commercial building with reliable backup power.",
+    images: [
+      "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-004",
     listedAt: "2026-06-05",
     views: 64,
     inquiries: 1,
   },
+
   {
     id: "prp-015",
     slug: "gulshan-2-retail-shop",
@@ -451,13 +535,17 @@ export const properties: Property[] = [
     totalFloors: 4,
     parking: 0,
     amenities: ["High Foot Traffic"],
-    description: "A small retail unit steps from Gulshan 2 Circle, previously operated as a boutique.",
-    images: ["https://picsum.photos/seed/prp-015-1/1200/900"],
+    description:
+      "A small retail unit steps from Gulshan 2 Circle, previously operated as a boutique.",
+    images: [
+      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-001",
     listedAt: "2026-02-14",
     views: 210,
     inquiries: 6,
   },
+
   {
     id: "prp-016",
     slug: "bashundhara-block-j-luxury-flat",
@@ -480,13 +568,23 @@ export const properties: Property[] = [
     floor: "8th",
     totalFloors: 9,
     parking: 2,
-    amenities: ["Lift", "Rooftop Garden", "Gym", "24/7 Security", "Generator Backup"],
+    amenities: [
+      "Lift",
+      "Rooftop Garden",
+      "Gym",
+      "24/7 Security",
+      "Generator Backup",
+    ],
     description:
       "A top-floor unit with private rooftop access, finished to a high standard with imported fittings throughout.",
-    images: ["https://picsum.photos/seed/prp-016-1/1200/900", "https://picsum.photos/seed/prp-016-2/1200/900"],
+    images: [
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
+      "https://images.unsplash.com/photo-1600607688969-a5bfcd646154?auto=format&fit=crop&w=1200&q=85",
+    ],
     agentId: "agt-003",
     listedAt: "2026-07-08",
     views: 245,
     inquiries: 5,
   },
 ];
+

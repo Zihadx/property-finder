@@ -1,69 +1,115 @@
-import Link from "next/link";
-import Image from "next/image";
-import { Building2, Layers, MapPinned, Store } from "lucide-react";
 import { propertyService } from "@/services/property.service";
 import { SectionHeading } from "./section-heading";
+import { PropertyCategoryCard } from "./property-category-card";
 import type { PropertyType } from "@/types/property";
 
 export const categories: {
   title: string;
+  subtitle: string;
   href: string;
-  icon: typeof Building2;
+  icon: "building" | "layers" | "map" | "store";
   types: PropertyType[];
 }[] = [
-  { title: "Apartments", href: "/properties/apartments", icon: Building2, types: ["Apartment", "Luxury Apartment"] },
-  { title: "Duplexes & Penthouses", href: "/properties/duplexes", icon: Layers, types: ["Duplex", "Penthouse"] },
-  { title: "Plots & Land", href: "/properties/plots", icon: MapPinned, types: ["Plot", "Land"] },
-  { title: "Commercial", href: "/properties/commercial", icon: Store, types: ["Commercial Space", "Office", "Shop"] },
+  {
+    title: "Apartments",
+    subtitle: "Refined urban living",
+    href: "/properties/apartments",
+    icon: "building",
+    types: ["Apartment", "Luxury Apartment"],
+  },
+  {
+    title: "Duplexes & Penthouses",
+    subtitle: "Elevated living",
+    href: "/properties/duplexes",
+    icon: "layers",
+    types: ["Duplex", "Penthouse"],
+  },
+  {
+    title: "Plots & Land",
+    subtitle: "Build what comes next",
+    href: "/properties/plots",
+    icon: "map",
+    types: ["Plot", "Land"],
+  },
+  {
+    title: "Commercial",
+    subtitle: "Spaces with purpose",
+    href: "/properties/commercial",
+    icon: "store",
+    types: ["Commercial Space", "Office", "Shop"],
+  },
 ];
 
-/**
- * Milestone 08: a horizontal editorial rail rather than a uniform icon
- * grid — each tile carries a representative photo and a live listing
- * count pulled through propertyService, so it reads as discovery rather
- * than static iconography.
- */
 export async function PropertyCategories() {
   const withData = await Promise.all(
     categories.map(async (category) => {
       const matches = await propertyService.listByTypes(category.types);
-      return { ...category, count: matches.length, image: matches[0]?.images[0] };
+
+      return {
+        title: category.title,
+        subtitle: category.subtitle,
+        href: category.href,
+        icon: category.icon,
+        count: matches.length,
+        image: matches[0]?.images?.[0],
+      };
     })
   );
 
   return (
-    <section className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-      <SectionHeading
-        eyebrow="Browse by category"
-        title="What are you looking for?"
-        description="Every listing sorted into the categories customers actually ask for."
+    <section className="relative overflow-hidden border-t border-border bg-background">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-40 top-20 h-[420px] w-[420px] rounded-full bg-[#2095AE]/[0.035] blur-[130px]"
       />
-      <div className="mt-10 flex gap-4 overflow-x-auto pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-        {withData.map(({ title, href, icon: Icon, count, image }) => (
-          <Link
-            key={href}
-            href={href}
-            className="group relative block aspect-[3/4] w-56 shrink-0 overflow-hidden rounded-[var(--radius-md)] bg-surface-muted"
-          >
-            {image && (
-              <Image
-                src={image}
-                alt={title}
-                fill
-                sizes="224px"
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent" />
-            <div className="absolute left-4 top-4 flex h-9 w-9 items-center justify-center rounded-full bg-surface/90 backdrop-blur-sm">
-              <Icon className="h-4 w-4 text-foreground" />
+
+      <div className="relative mx-auto max-w-[1600px] px-6 py-20 sm:px-8 lg:px-12 lg:py-28">
+        <SectionHeading
+          eyebrow="Explore the collection"
+          title="Find a space that fits your life."
+          description="From private residences to investment-ready commercial spaces, explore properties curated around the way you want to live, work and invest."
+        />
+
+        <div className="mt-14 flex gap-3 overflow-x-auto pb-6 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden lg:mt-16 lg:gap-4">
+          {withData.map((category, index) => (
+            <PropertyCategoryCard
+              key={category.href}
+              title={category.title}
+              subtitle={category.subtitle}
+              href={category.href}
+              icon={category.icon}
+              count={category.count}
+              image={category.image}
+              index={index}
+            />
+          ))}
+
+          <div className="hidden w-[180px] shrink-0 items-end justify-end pb-2 pr-2 lg:flex">
+            <div className="max-w-[150px]">
+              <p className="text-[9px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+                Curated
+              </p>
+
+              <p className="mt-3 font-display text-xl leading-tight tracking-[-0.02em] text-foreground">
+                Property, considered differently.
+              </p>
             </div>
-            <div className="absolute inset-x-4 bottom-4">
-              <p className="font-display text-lg leading-snug text-white">{title}</p>
-              <p className="ledger-value mt-1 text-xs text-white/80">{count} listings</p>
-            </div>
-          </Link>
-        ))}
+          </div>
+        </div>
+
+        <div className="mt-8 flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex items-center gap-3">
+            <span className="h-px w-8 bg-foreground/30" />
+
+            <span className="text-[9px] font-medium uppercase tracking-[0.28em] text-muted-foreground">
+              Four ways to discover
+            </span>
+          </div>
+
+          <span className="text-xs text-muted-foreground">
+            Homes · Investments · Land · Commercial
+          </span>
+        </div>
       </div>
     </section>
   );

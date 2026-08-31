@@ -1,10 +1,10 @@
 import Link from "next/link";
-import { ArrowUpRight, ChevronDown, MapPin, Sparkles } from "lucide-react";
+import { ArrowUpRight,  MapPin, Sparkles } from "lucide-react";
 import { HeroProjects } from "./hero-projects";
 
 export function Hero() {
   return (
-    <section className="relative isolate h-[100svh] min-h-[720px] overflow-hidden bg-[#06101f] text-white">
+    <section className="relative isolate h-svh min-h-180 overflow-hidden bg-[#06101f] text-white">
       {/* =========================================================
           CINEMATIC BACKGROUND
       ========================================================== */}
@@ -53,7 +53,7 @@ export function Hero() {
         <div className="mx-auto flex max-w-[1600px] items-center justify-between px-6 py-7 sm:px-8 lg:px-12">
           {/* Left */}
           <div className="flex items-center gap-3">
-            <span className="flex h-8 w-8 items-center justify-center border border-white/20 bg-white/[0.06] backdrop-blur-md">
+            <span className="flex h-8 w-8 items-center justify-center border border-white/20 bg-white/6 backdrop-blur-md">
               <Sparkles className="h-3.5 w-3.5 text-white/80" />
             </span>
 
@@ -145,7 +145,7 @@ export function Hero() {
 
               <Link
                 href="/areas"
-                className="group inline-flex h-13 items-center gap-3 border border-white/20 bg-white/[0.04] px-6 text-[10px] font-medium uppercase tracking-[0.18em] text-white/80 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:bg-white/[0.08]"
+                className="group inline-flex h-13 items-center gap-3 border border-white/20 bg-white/4 px-6 text-[10px] font-medium uppercase tracking-[0.18em] text-white/80 backdrop-blur-md transition-all duration-500 hover:border-white/40 hover:bg-white/8"
               >
                 <MapPin className="h-3.5 w-3.5 text-white/50" />
                 Explore Areas
@@ -159,7 +159,7 @@ export function Hero() {
           FLOATING PROPERTY STAT
       ========================================================== */}
 
-      <div className="absolute bottom-[15.5rem] right-6 z-20 hidden lg:block xl:right-12">
+      <div className="absolute bottom-62 right-6 z-20 hidden lg:block xl:right-12">
         <div className="border border-white/15 bg-black/15 px-5 py-4 backdrop-blur-xl">
           <div className="flex items-center gap-3">
             <span className="h-1.5 w-1.5 rounded-full bg-white/70" />

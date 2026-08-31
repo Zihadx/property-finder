@@ -1,4 +1,4 @@
-import { ArrowUpRight, BarChart3, TrendingUp } from "lucide-react";
+import { BarChart3, TrendingUp } from "lucide-react";
 
 import { areaService } from "@/services/area.service";
 import { propertyService } from "@/services/property.service";

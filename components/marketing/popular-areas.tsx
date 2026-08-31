@@ -42,7 +42,7 @@ export async function PopularAreas() {
         />
 
         {/* Bento architecture */}
-        <div className="mt-14 grid auto-rows-[180px] grid-cols-2 gap-3 sm:gap-4 lg:mt-16 lg:auto-rows-[190px] lg:grid-cols-4">
+        <div className="mt-14 grid auto-rows-45 grid-cols-2 gap-3 sm:gap-4 lg:mt-16 lg:auto-rows-47.5 lg:grid-cols-4">
           {lead && (
             <AreaCard
               area={lead}
@@ -64,7 +64,7 @@ export async function PopularAreas() {
         </div>
 
         {/* Bottom editorial metadata */}
-        <div className="mt-8 flex flex-col gap-4 border-t border-white/[0.08] pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-8 flex flex-col gap-4 border-t border-white/8 pt-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3">
             <span className="h-px w-8 bg-white/30" />
 

@@ -54,7 +54,7 @@ export function HeroProjects() {
 
           <div className="min-w-0 flex-1 overflow-hidden">
             <div
-              className="flex h-[150px] items-end gap-2 sm:h-[165px] sm:gap-3"
+              className="flex h-37.5 items-end gap-2 sm:h-41.25 sm:gap-3"
               onMouseLeave={() => setActive(2)}
             >
               {projects.map((project, index) => {
@@ -153,7 +153,7 @@ export function HeroProjects() {
                             </span>
                           </div>
 
-                          <h2 className="mt-2 font-display text-xl tracking-[-0.025em] text-white sm:text-2xl">
+                          <h2 className="mt-2 font-display text-xl tracking-tight text-white sm:text-2xl">
                             {project.title}
                           </h2>
 

@@ -1,70 +1,102 @@
-# ListEasy BD
+# LISTEASY BD
 
-Premium property catalog & lead-generation frontend for Bangladeshi real-estate agencies.
+### The Digital Standard for Premium Real Estate in Bangladesh.
 
-**Status: Milestones 01–04 in progress** (Foundation, Design System, Mock Data, Landing Page) out of a 30-milestone plan. Each subsequent milestone will ship as its own reviewed increment.
+> **Discover exceptional properties. Present them beautifully.  
+> Turn attention into qualified conversations.**
 
-## Stack
+ListEasy BD is a premium property discovery and lead-generation platform designed for forward-thinking Bangladeshi real-estate agencies.
 
-Next.js 16 (App Router, Turbopack) · React 19 · TypeScript · Tailwind CSS 4 · Redux Toolkit · Zod · Motion · Recharts · Lucide · Sonner
+Built around an editorial luxury aesthetic, intelligent information hierarchy, and conversion-focused UX, ListEasy BD transforms property browsing from a conventional listing experience into a refined digital property catalog.
 
-## Getting started
+---
 
-```bash
-npm install
-npm run dev
-```
+## ✦ Product Vision
 
-## Architecture
+Most real-estate websites treat properties like rows in a database.
 
-```
-app/            routes (App Router)
-components/
-  ui/           primitives — Button, Badge, Card, Input
-  property/     PropertyCard, PropertyPrice (ledger motif)
-  marketing/    Hero, FeaturedProperties, PopularAreas, WhyListEasy
-  layout/       SiteHeader, SiteFooter
-  dashboard/    (reserved for Milestone 16+)
-data/           mock Bangladesh property/agent/area data
-types/          domain types (Property, Agent, Inquiry, Area)
-services/       data-access layer — UI never imports /data directly
-redux/          store, slices (favorites, compare, filters), provider
-lib/            utils (cn, formatBDT, formatArea)
-```
+**ListEasy BD treats them like assets worth presenting.**
 
-### Swapping mock data for a real backend later
+The platform is designed around a simple principle:
 
-UI components only ever call `services/*.service.ts`. To connect a real
-backend, rewrite the function bodies in `property.service.ts`,
-`agent.service.ts`, and `area.service.ts` to call your API/DB instead of
-reading from `data/*.ts` — no component code needs to change.
+> **Luxury real estate deserves a luxury digital experience.**
 
-## Design system
+Every part of the interface is intentionally composed to communicate:
 
-Tokens live in `app/globals.css` under `@theme inline`. Palette: warm ivory
-background, deep ink text, muted brass accent, deep olive secondary —
-deliberately not the default blue-real-estate or cream+terracotta look.
-The signature visual motif is the "ledger" treatment (`.ledger-value` /
-`.ledger-label` classes) used for prices and specs — mono tabular numerals
-with small-caps labels, styled like a title-deed line item rather than a
-bold SaaS price tag.
+**Trust · Prestige · Clarity · Sophistication · Confidence**
 
-**Fonts:** this sandbox has no outbound access to `fonts.googleapis.com`,
-so `globals.css` currently references `Fraunces` / `Inter` / `JetBrains
-Mono` as CSS font-family names with system fallbacks — they'll render with
-fallback fonts until you either (a) load them via `next/font/google` in
-`app/layout.tsx` once you're in an environment with normal internet
-access, or (b) self-host the font files. Swapping to `next/font/google`
-is a five-line change once network access isn't restricted.
+Rather than relying on the typical blue-and-white real-estate aesthetic, ListEasy BD uses a restrained visual language inspired by:
 
-**Images:** property/agent/area photos are placeholder URLs
-(`picsum.photos`, `i.pravatar.cc`) seeded per-record so they're stable
-across reloads. Replace with real photography before going live —
-`next.config.ts` already whitelists these two hosts under
-`images.remotePatterns`; add your real image host there too.
+- Editorial property publications
+- Private real-estate portfolios
+- Architectural magazines
+- Luxury hospitality
+- High-end financial products
+- Modern digital brands
 
-## Verification run on this build
+The result is an experience that feels **premium without becoming excessive**.
 
-- `npx tsc --noEmit` — clean
-- `npx eslint .` — clean
-- `npm run build` — clean, `/` prerenders as static content
+---
+
+# ✦ Experience
+
+ListEasy BD is built to support the complete property-discovery journey.
+
+### Discover
+
+Explore a curated selection of residential, commercial, and investment properties across Bangladesh.
+
+### Understand
+
+Property information is presented through a structured editorial hierarchy — price, location, area, specifications, purpose, and status are easy to understand without overwhelming the user.
+
+### Compare
+
+Users can save and compare properties while building their shortlist.
+
+### Preview
+
+Quick-view interactions allow users to inspect a property without abandoning the browsing experience.
+
+### Connect
+
+The platform is designed around lead generation, making it easier for interested buyers to move from **property discovery → inquiry → conversation**.
+
+---
+
+# ✦ Design Philosophy
+
+ListEasy BD follows an **editorial luxury system** rather than a conventional SaaS or marketplace design.
+
+### Quiet Luxury
+
+Premium interfaces don't need to shout.
+
+The visual system deliberately uses:
+
+- Warm ivory surfaces
+- Deep ink typography
+- Muted brass accents
+- Deep olive secondary tones
+- Hairline borders
+- Generous whitespace
+- Restrained shadows
+- Cinematic imagery
+- Subtle motion
+
+The interface is designed to feel **expensive, calm, confident, and timeless**.
+
+---
+
+## The Ledger Motif
+
+One of the platform's signature visual elements is the **Ledger** treatment.
+
+Property prices and specifications are presented like carefully recorded title-deed information rather than conventional e-commerce pricing.
+
+```text
+PRICE
+
+৳ 4.85 CR
+
+4 BEDROOMS      4 BATHROOMS      3,850 SQ FT

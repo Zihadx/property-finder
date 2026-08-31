@@ -65,6 +65,7 @@ export function PropertyCard({ property }: { property: Property }) {
         },
       }}
       className="
+      
         group relative flex h-full flex-col
         overflow-hidden
         border border-border/70
@@ -117,7 +118,6 @@ export function PropertyCard({ property }: { property: Property }) {
               />
             </motion.div>
 
-            {/* Cinematic overlay */}
             <motion.div
               initial={{ opacity: 0.45 }}
               whileInView={{ opacity: 0.8 }}

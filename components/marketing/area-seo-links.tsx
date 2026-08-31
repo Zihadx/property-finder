@@ -1,61 +1,116 @@
+
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+
 import { areaService } from "@/services/area.service";
 import { propertyService } from "@/services/property.service";
 import { SectionHeading } from "./section-heading";
 import type { PropertyType } from "@/types/property";
 
 /**
- * Milestone 14: dense, crawlable text links rather than another card
- * grid — this section exists for search-engine internal linking and for
- * the visitor who already knows exactly what they want ("Apartment in
- * Gulshan"). Every combo is generated from properties that actually
- * exist, so no link leads to an empty result page.
+ * Compact market index.
+ *
+ * SEO-friendly internal links generated only from combinations
+ * that exist in the current property catalog.
  */
 export async function AreaSeoLinks() {
-  const [allProperties, areas] = await Promise.all([propertyService.list(), areaService.list()]);
-  const areaNames = new Map(areas.map((a) => [a.slug, a.name]));
+  const [allProperties, areas] = await Promise.all([
+    propertyService.list(),
+    areaService.list(),
+  ]);
 
-  const grouped = new Map<string, { areaName: string; types: Set<PropertyType> }>();
+  const areaNames = new Map(
+    areas.map((area) => [area.slug, area.name]),
+  );
+
+  const grouped = new Map<
+    string,
+    {
+      areaName: string;
+      types: Set<PropertyType>;
+    }
+  >();
+
   for (const property of allProperties) {
     const slug = property.location.areaSlug;
+
     const entry =
-      grouped.get(slug) ?? { areaName: areaNames.get(slug) ?? property.location.area, types: new Set<PropertyType>() };
+      grouped.get(slug) ?? {
+        areaName: areaNames.get(slug) ?? property.location.area,
+        types: new Set<PropertyType>(),
+      };
+
     entry.types.add(property.type);
     grouped.set(slug, entry);
   }
 
   const entries = Array.from(grouped.entries())
-    .map(([slug, { areaName, types }]) => ({ slug, areaName, types: Array.from(types) }))
+    .map(([slug, { areaName, types }]) => ({
+      slug,
+      areaName,
+      types: Array.from(types),
+    }))
     .sort((a, b) => a.areaName.localeCompare(b.areaName));
 
+  if (!entries.length) return null;
+
   return (
-    <section className="mx-auto max-w-7xl px-6 py-16 md:py-24">
-      <SectionHeading
-        eyebrow="Browse by search"
-        title="Explore Dhaka by area"
-        description="Jump straight to what you're looking for."
-      />
-      <div className="mt-10 columns-1 gap-x-10 sm:columns-2 lg:columns-3">
-        {entries.map(({ slug, areaName, types }) => (
-          <div key={slug} className="mb-6 break-inside-avoid">
-            <Link href={`/areas/${slug}`} className="font-display text-sm text-foreground hover:text-accent">
-              {areaName}
-            </Link>
-            <ul className="mt-2 flex flex-col gap-1">
-              {types.map((type) => (
-                <li key={type}>
+    <section className="border-t border-border/60">
+      <div className="mx-auto container px-6 py-10 md:py-12">
+        <SectionHeading
+          eyebrow="Market index"
+          title="Explore by area"
+          description="Browse available properties by neighbourhood and type."
+        />
+
+        <div className="mt-7 divide-y divide-border/60 border-y border-border/60">
+          {entries.map(({ slug, areaName, types }, index) => (
+            <div
+              key={slug}
+              className="group flex items-center gap-3 py-3.5 transition-colors duration-200 hover:bg-muted/30 md:gap-5 md:px-3"
+            >
+              {/* Index */}
+              <span className="w-5 shrink-0 font-mono text-[9px] tabular-nums tracking-wider text-muted-foreground/50">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+
+              {/* Area */}
+              <Link
+                href={`/areas/${slug}`}
+                className="flex w-32 shrink-0 items-center gap-1.5 text-sm font-medium tracking-tight text-foreground transition-colors hover:text-primary sm:w-40 md:w-44"
+              >
+                {areaName}
+
+                <ArrowUpRight className="size-3 opacity-0 transition-all duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-60" />
+              </Link>
+
+              {/* Types */}
+              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-x-3 gap-y-1.5">
+                {types.map((type) => (
                   <Link
+                    key={type}
                     href={`/properties?area=${slug}&type=${encodeURIComponent(type)}`}
-                    className="text-sm text-muted-foreground hover:text-accent"
+                    className="text-[11px] text-muted-foreground transition-colors hover:text-foreground"
                   >
-                    {type} listings in {areaName}
+                    {type}
                   </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+                ))}
+              </div>
+
+              {/* Desktop indicator */}
+              <span
+                className="hidden size-1 shrink-0 rounded-full bg-primary/40 md:block"
+                aria-hidden="true"
+              />
+            </div>
+          ))}
+        </div>
+
+        <p className="mt-3 text-[10px] text-muted-foreground/60">
+          {entries.length} areas · Current catalog
+        </p>
       </div>
     </section>
   );
 }
+

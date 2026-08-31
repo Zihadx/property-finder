@@ -181,8 +181,8 @@ export async function FeaturedProperties() {
           <div
             className="
               absolute
-              left-5
-              top-5
+              left-10
+              -top-4
               z-10
               hidden
               items-center

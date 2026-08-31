@@ -2,8 +2,24 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { HeroSearch } from "./hero-search";
+import { propertyService } from "@/services/property.service";
+import { areaService } from "@/services/area.service";
+import { agentService } from "@/services/agent.service";
 
-export function Hero() {
+/**
+ * Flagged back in Milestone 18 and left alone as out of scope at the
+ * time: the stat row was hardcoded (246 listings, 14 areas) against an
+ * actual catalog of 16 properties and 13 areas. Fixing now since it's a
+ * one-line-per-stat change and the numbers being visibly wrong on the
+ * very first thing a visitor sees isn't something to keep deferring.
+ */
+export async function Hero() {
+  const [properties, areas, agents] = await Promise.all([
+    propertyService.list(),
+    areaService.list(),
+    agentService.list(),
+  ]);
+
   return (
     <section className="border-b border-border bg-background">
       <div className="mx-auto grid max-w-7xl gap-10 px-6 py-16 md:grid-cols-[1.1fr_0.9fr] md:py-24">
@@ -34,15 +50,15 @@ export function Hero() {
           <dl className="mt-14 grid grid-cols-3 gap-6 border-t border-border pt-6">
             <div>
               <dt className="ledger-label">Listings</dt>
-              <dd className="ledger-value mt-1 text-2xl text-foreground">246</dd>
+              <dd className="ledger-value mt-1 text-2xl text-foreground">{properties.length}</dd>
             </div>
             <div>
               <dt className="ledger-label">Areas Covered</dt>
-              <dd className="ledger-value mt-1 text-2xl text-foreground">14</dd>
+              <dd className="ledger-value mt-1 text-2xl text-foreground">{areas.length}</dd>
             </div>
             <div>
               <dt className="ledger-label">Active Agents</dt>
-              <dd className="ledger-value mt-1 text-2xl text-foreground">4</dd>
+              <dd className="ledger-value mt-1 text-2xl text-foreground">{agents.length}</dd>
             </div>
           </dl>
         </div>

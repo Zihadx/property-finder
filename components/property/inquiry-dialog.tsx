@@ -9,6 +9,7 @@ import { Dialog } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { inquirySchema, type InquiryFormValues } from "@/lib/schemas";
+import { inquiryService } from "@/services/inquiry.service";
 
 const MESSAGE_MAX = 500;
 
@@ -16,10 +17,14 @@ export function InquiryDialog({
   open,
   onClose,
   propertyTitle,
+  propertyId,
+  agentId,
 }: {
   open: boolean;
   onClose: () => void;
   propertyTitle: string;
+  propertyId: string;
+  agentId: string;
 }) {
   const [submitted, setSubmitted] = React.useState<{ name: string } | null>(null);
   const {
@@ -34,8 +39,17 @@ export function InquiryDialog({
   const messageLength = message?.length ?? 0;
 
   async function onSubmit(values: InquiryFormValues) {
-    // Backend not implemented yet — simulate a network round trip.
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    // Brief delay for perceived responsiveness — the create() call below
+    // does the real work (previously this just simulated one and threw
+    // the data away).
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    await inquiryService.create({
+      propertyId,
+      agentId,
+      customerName: values.name,
+      customerPhone: values.phone,
+      message: values.message ?? "",
+    });
     toast.success("Inquiry sent", {
       description: `The agent will reach out to ${values.name} shortly.`,
     });

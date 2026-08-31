@@ -1,15 +1,18 @@
 "use client";
 
-import { Heart, Share2 } from "lucide-react";
+import { Share2 } from "lucide-react";
 import { toast } from "sonner";
-import { useAppDispatch, useAppSelector } from "@/redux/hooks";
-import { toggleFavorite } from "@/redux/slices/favoritesSlice";
-import { cn } from "@/lib/utils";
+import { PropertyFavoriteButton } from "./property-favorite-button";
+import { PropertyCompareButton } from "./property-compare-button";
 
+/**
+ * Milestone 21: was reimplementing the same favorite toggle already
+ * abstracted into PropertyFavoriteButton back in Milestone 05 — swapped
+ * to the shared atom (with a style override for this page's plain
+ * background) and added the compare toggle, which was missing here
+ * entirely even though Compare is a first-class feature everywhere else.
+ */
 export function PropertyActionsRow({ propertyId, title }: { propertyId: string; title: string }) {
-  const dispatch = useAppDispatch();
-  const isFavorite = useAppSelector((state) => state.favorites.propertyIds.includes(propertyId));
-
   async function handleShare() {
     const url = typeof window !== "undefined" ? window.location.href : "";
     if (navigator.share) {
@@ -24,21 +27,16 @@ export function PropertyActionsRow({ propertyId, title }: { propertyId: string; 
     toast.success("Link copied", { description: "Share it with your customer on WhatsApp or SMS." });
   }
 
+  const plainButtonClass = "border border-border-strong bg-transparent backdrop-blur-none hover:bg-surface-muted";
+
   return (
     <div className="flex items-center gap-2">
-      <button
-        type="button"
-        onClick={() => dispatch(toggleFavorite(propertyId))}
-        aria-pressed={isFavorite}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-border-strong hover:bg-surface-muted"
-        aria-label={isFavorite ? "Remove from saved properties" : "Save property"}
-      >
-        <Heart className={cn("h-4 w-4", isFavorite ? "fill-danger text-danger" : "text-foreground")} />
-      </button>
+      <PropertyFavoriteButton propertyId={propertyId} className={plainButtonClass} />
+      <PropertyCompareButton propertyId={propertyId} className={plainButtonClass} />
       <button
         type="button"
         onClick={handleShare}
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-border-strong hover:bg-surface-muted"
+        className="flex h-9 w-9 items-center justify-center rounded-full border border-border-strong hover:bg-surface-muted"
         aria-label="Share property"
       >
         <Share2 className="h-4 w-4" />

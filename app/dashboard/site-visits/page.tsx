@@ -10,6 +10,13 @@ import type { SiteVisit } from "@/types/inquiry";
 
 export const metadata: Metadata = { title: "Site Visits" };
 
+// Same reasoning as /dashboard/leads: visit requests submitted from the
+// public property pages are pushed into the mock in-memory store at
+// request time (see siteVisitService.create). Without this, Next would
+// prerender this page once at build time and new requests would never
+// show up until a rebuild.
+export const dynamic = "force-dynamic";
+
 const statusVariant: Record<SiteVisit["status"], "warning" | "success" | "neutral" | "danger"> = {
   Pending: "warning",
   Confirmed: "success",

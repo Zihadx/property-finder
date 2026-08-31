@@ -12,7 +12,9 @@ import { PropertyInsights } from "@/components/marketing/property-insights";
 import { AreaSeoLinks } from "@/components/marketing/area-seo-links";
 import { CustomerStories } from "@/components/marketing/customer-stories";
 import { OwnerConversion } from "@/components/marketing/owner-conversion";
+import { AgentConversion } from "@/components/marketing/agent-conversion";
 import { WhyListEasy } from "@/components/marketing/why-listeasy";
+import { FinalCta } from "@/components/marketing/final-cta";
 
 export default function HomePage() {
   return (
@@ -31,7 +33,9 @@ export default function HomePage() {
         <AreaSeoLinks />
         <CustomerStories />
         <OwnerConversion />
+        <AgentConversion />
         <WhyListEasy />
+        <FinalCta />
       </main>
       <SiteFooter />
     </>

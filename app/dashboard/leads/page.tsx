@@ -7,6 +7,12 @@ import type { Inquiry } from "@/types/inquiry";
 
 export const metadata: Metadata = { title: "Leads" };
 
+// Inquiries submitted from the public property pages are pushed into the
+// mock in-memory store at request time (see inquiryService.create). Without
+// this, Next would prerender this page once at build time and new leads
+// would never appear until a rebuild.
+export const dynamic = "force-dynamic";
+
 const statusVariant: Record<Inquiry["status"], "warning" | "accent" | "success" | "neutral"> = {
   New: "warning",
   Contacted: "accent",

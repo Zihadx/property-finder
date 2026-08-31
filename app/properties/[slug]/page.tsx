@@ -11,6 +11,7 @@ import { PropertyAmenities } from "@/components/property/property-amenities";
 import { PropertyActionsRow } from "@/components/property/property-actions-row";
 import { AgentContactCard } from "@/components/property/agent-contact-card";
 import { MobileActionBar } from "@/components/property/mobile-action-bar";
+import { PropertyLocationMap } from "@/components/property/property-location-map";
 import { SimilarProperties } from "@/components/property/similar-properties";
 import { propertyStatusVariant } from "@/components/property/property-status";
 import { propertyService } from "@/services/property.service";
@@ -86,7 +87,7 @@ export default async function PropertyDetailPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <SiteHeader />
-      <main className="mx-auto max-w-7xl px-6 py-10 pb-28 lg:pb-10">
+      <main className="mx-auto max-w-7xl px-6 py-10 pb-36 lg:pb-10">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[1fr_360px]">
           <div className="min-w-0">
             <PropertyGallery images={property.images} title={property.title} />
@@ -128,22 +129,27 @@ export default async function PropertyDetailPage({
 
             <div className="mt-10">
               <h2 className="font-display text-xl text-foreground">Location</h2>
-              <div className="mt-4 flex aspect-[16/7] items-center justify-center rounded-[var(--radius-md)] border border-border bg-surface-muted text-sm text-muted-foreground">
-                Map view — {property.location.address} ({property.location.lat.toFixed(4)},{" "}
-                {property.location.lng.toFixed(4)})
+              <div className="mt-4">
+                <PropertyLocationMap
+                  lat={property.location.lat}
+                  lng={property.location.lng}
+                  address={property.location.address}
+                />
               </div>
             </div>
           </div>
 
           <div className="hidden lg:block">
-            <div className="sticky top-24">{agent && <AgentContactCard agent={agent} propertyTitle={property.title} />}</div>
+            <div className="sticky top-24">
+              {agent && <AgentContactCard agent={agent} propertyId={property.id} propertyTitle={property.title} />}
+            </div>
           </div>
         </div>
 
         <SimilarProperties properties={similar} />
       </main>
 
-      {agent && <MobileActionBar agent={agent} propertyTitle={property.title} />}
+      {agent && <MobileActionBar agent={agent} propertyId={property.id} propertyTitle={property.title} />}
       <SiteFooter />
     </>
   );

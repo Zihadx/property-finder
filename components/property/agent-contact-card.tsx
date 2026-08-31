@@ -3,14 +3,22 @@
 import * as React from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Phone, MessageCircle, CalendarCheck } from "lucide-react";
+import { Phone, MessageCircle, CalendarCheck, MessageSquareText } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { InquiryDialog } from "./inquiry-dialog";
 import { SiteVisitDialog } from "./site-visit-dialog";
 import type { Agent } from "@/types/agent";
 
-export function AgentContactCard({ agent, propertyTitle }: { agent: Agent; propertyTitle: string }) {
+export function AgentContactCard({
+  agent,
+  propertyId,
+  propertyTitle,
+}: {
+  agent: Agent;
+  propertyId: string;
+  propertyTitle: string;
+}) {
   const [inquiryOpen, setInquiryOpen] = React.useState(false);
   const [visitOpen, setVisitOpen] = React.useState(false);
   const whatsappHref = `https://wa.me/${agent.whatsapp.replace(/[^\d]/g, "")}?text=${encodeURIComponent(
@@ -47,10 +55,26 @@ export function AgentContactCard({ agent, propertyTitle }: { agent: Agent; prope
           <CalendarCheck className="mr-2 h-4 w-4" />
           Request Site Visit
         </Button>
+        <Button variant="ghost" onClick={() => setInquiryOpen(true)}>
+          <MessageSquareText className="mr-2 h-4 w-4" />
+          Send Inquiry
+        </Button>
       </div>
 
-      <InquiryDialog open={inquiryOpen} onClose={() => setInquiryOpen(false)} propertyTitle={propertyTitle} />
-      <SiteVisitDialog open={visitOpen} onClose={() => setVisitOpen(false)} propertyTitle={propertyTitle} />
+      <InquiryDialog
+        open={inquiryOpen}
+        onClose={() => setInquiryOpen(false)}
+        propertyId={propertyId}
+        agentId={agent.id}
+        propertyTitle={propertyTitle}
+      />
+      <SiteVisitDialog
+        open={visitOpen}
+        onClose={() => setVisitOpen(false)}
+        propertyId={propertyId}
+        agentId={agent.id}
+        propertyTitle={propertyTitle}
+      />
     </Card>
   );
 }

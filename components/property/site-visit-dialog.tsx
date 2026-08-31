@@ -10,15 +10,26 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { siteVisitSchema, type SiteVisitFormValues } from "@/lib/schemas";
+import { siteVisitService } from "@/services/site-visit.service";
+
+const PREFERRED_HOUR: Record<SiteVisitFormValues["preferredTime"], string> = {
+  Morning: "10:00:00",
+  Afternoon: "14:00:00",
+  Evening: "18:00:00",
+};
 
 export function SiteVisitDialog({
   open,
   onClose,
   propertyTitle,
+  propertyId,
+  agentId,
 }: {
   open: boolean;
   onClose: () => void;
   propertyTitle: string;
+  propertyId: string;
+  agentId: string;
 }) {
   const [submitted, setSubmitted] = React.useState<{ name: string; time: string } | null>(null);
   const {
@@ -29,7 +40,14 @@ export function SiteVisitDialog({
   } = useForm<SiteVisitFormValues>({ resolver: zodResolver(siteVisitSchema), mode: "onBlur" });
 
   async function onSubmit(values: SiteVisitFormValues) {
-    await new Promise((resolve) => setTimeout(resolve, 700));
+    await new Promise((resolve) => setTimeout(resolve, 400));
+    await siteVisitService.create({
+      propertyId,
+      agentId,
+      customerName: values.name,
+      customerPhone: values.phone,
+      scheduledAt: `${values.preferredDate}T${PREFERRED_HOUR[values.preferredTime]}`,
+    });
     toast.success("Site visit requested", {
       description: `We'll confirm a ${values.preferredTime.toLowerCase()} slot with ${values.name}.`,
     });

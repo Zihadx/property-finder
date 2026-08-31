@@ -5,7 +5,7 @@ import { propertyService } from "@/services/property.service";
 import { SectionHeading } from "./section-heading";
 import type { PropertyType } from "@/types/property";
 
-const categories: {
+export const categories: {
   title: string;
   href: string;
   icon: typeof Building2;

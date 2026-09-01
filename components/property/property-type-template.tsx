@@ -20,17 +20,24 @@ export async function PropertyTypeTemplate({
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-7xl px-6 py-10">
+      <main className="mx-auto container px-6 py-10">
         <p className="ledger-label mb-2">Property Type</p>
         <h1 className="font-display text-3xl text-foreground">{title}</h1>
-        <p className="mt-2 max-w-xl text-sm text-muted-foreground">{description}</p>
+        <p className="mt-2 max-w-xl text-sm text-muted-foreground">
+          {description}
+        </p>
 
         <div className="mt-4 flex items-center justify-between border-b border-border pb-5">
           <p className="text-sm text-muted-foreground">
-            <span className="ledger-value text-foreground">{properties.length}</span> listings
+            <span className="ledger-value text-foreground">
+              {properties.length}
+            </span>{" "}
+            listings
           </p>
           <Button variant="link" asChild>
-            <Link href={`/properties?type=${encodeURIComponent(types[0])}`}>Refine in full search →</Link>
+            <Link href={`/properties?type=${encodeURIComponent(types[0])}`}>
+              Refine in full search →
+            </Link>
           </Button>
         </div>
 

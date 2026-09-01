@@ -7,29 +7,36 @@ import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useMounted } from "@/lib/use-mounted";
 
+interface DialogProps {
+  open: boolean;
+  onClose: () => void;
+  title?: string;
+  children: React.ReactNode;
+  className?: string;
+  showHeader?: boolean;
+}
+
 export function Dialog({
   open,
   onClose,
   title,
   children,
   className,
-}: {
-  open: boolean;
-  onClose: () => void;
-  title: string;
-  children: React.ReactNode;
-  className?: string;
-}) {
+  showHeader = true,
+}: DialogProps) {
   const mounted = useMounted();
   const reduceMotion = useReducedMotion();
 
   React.useEffect(() => {
     if (!open) return;
+
     const onKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
     };
+
     document.addEventListener("keydown", onKeyDown);
     document.body.style.overflow = "hidden";
+
     return () => {
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = "";
@@ -50,31 +57,62 @@ export function Dialog({
             onClick={onClose}
             aria-hidden
           />
+
           <motion.div
             role="dialog"
             aria-modal="true"
-            aria-label={title}
-            initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 24, scale: 0.98 }}
-            animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-            exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }}
-            transition={{ duration: reduceMotion ? 0.01 : 0.18, ease: "easeOut" }}
+            aria-label={title || "ListEasy menu"}
+            initial={
+              reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: 24, scale: 0.98 }
+            }
+            animate={
+              reduceMotion
+                ? { opacity: 1 }
+                : { opacity: 1, y: 0, scale: 1 }
+            }
+            exit={
+              reduceMotion
+                ? { opacity: 0 }
+                : { opacity: 0, y: 12, scale: 0.98 }
+            }
+            transition={{
+              duration: reduceMotion ? 0.01 : 0.18,
+              ease: "easeOut",
+            }}
             className={cn(
               "relative flex max-h-[88vh] w-full max-w-md flex-col overflow-hidden rounded-t-[var(--radius-lg)] bg-surface shadow-[var(--shadow-lg)] sm:rounded-[var(--radius-lg)]",
               className
             )}
           >
-            <div className="flex items-center justify-between border-b border-border px-5 py-4">
-              <p className="font-display text-lg text-foreground">{title}</p>
-              <button
-                type="button"
-                onClick={onClose}
-                aria-label="Close"
-                className="flex h-8 w-8 items-center justify-center rounded-full hover:bg-surface-muted"
-              >
-                <X className="h-4 w-4" />
-              </button>
+            {/* Custom branding header */}
+            {showHeader && (
+              <div className="flex items-center justify-between border-b border-border px-5 py-5">
+                <div>
+                  <p className="font-display text-xl tracking-[-0.03em]">
+                    ListEasy
+                  </p>
+
+                  <p className="mt-1 text-[8px] uppercase tracking-[0.25em] text-muted-foreground">
+                    Premium Real Estate
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={onClose}
+                  aria-label="Close menu"
+                  className="flex h-9 w-9 items-center justify-center rounded-full transition-colors hover:bg-surface-muted"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+            )}
+
+            <div className="flex-1 overflow-y-auto">
+              {children}
             </div>
-            <div className="flex-1 overflow-y-auto">{children}</div>
           </motion.div>
         </div>
       )}

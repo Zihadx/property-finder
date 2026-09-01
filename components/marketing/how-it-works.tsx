@@ -63,7 +63,7 @@ export function HowItWorks() {
       {/* Subtle atmospheric detail */}
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute -right-32 top-1/2 size-72 -translate-y-1/2 rounded-full bg-cyan-700/5 blur-3xl"
+        className="pointer-events-none absolute -right-32 top-1/2 size-72 -translate-y-1/2 rounded-full blur-3xl"
       />
 
       <div className="relative mx-auto container px-6 py-12 sm:px-8 md:py-16 lg:px-12">

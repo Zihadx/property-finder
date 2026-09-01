@@ -11,36 +11,61 @@ export function Pagination({
   totalPages: number;
   buildHref: (page: number) => string;
 }) {
-  if (totalPages <= 1) return null;
 
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+if (totalPages <= 1) return null;
 
-  return (
-    <nav className="mt-12 flex items-center justify-center gap-2" aria-label="Pagination">
+const pages = Array.from(
+  { length: totalPages },
+  (_, i) => i + 1,
+);
+
+return (
+  <nav
+    className="mt-20 border-t border-border/60 pt-7"
+    aria-label="Pagination"
+  >
+    <div className="flex items-center justify-between">
+      {/* Previous */}
       <PageLink
         href={buildHref(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
         aria-label="Previous page"
       >
-        <ChevronLeft className="h-4 w-4" />
+        <ChevronLeft className="size-3.5" />
+        <span className="hidden text-[8px] uppercase tracking-[0.2em] sm:inline">
+          Previous
+        </span>
       </PageLink>
 
-      {pages.map((page) => (
-        <PageLink key={page} href={buildHref(page)} active={page === currentPage}>
-          <span className="ledger-value">{page}</span>
-        </PageLink>
-      ))}
+      {/* Page numbers */}
+      <div className="flex items-center gap-1">
+        {pages.map((page) => (
+          <PageLink
+            key={page}
+            href={buildHref(page)}
+            active={page === currentPage}
+          >
+            <span className="font-mono text-[9px] tabular-nums">
+              {String(page).padStart(2, "0")}
+            </span>
+          </PageLink>
+        ))}
+      </div>
 
+      {/* Next */}
       <PageLink
         href={buildHref(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
         aria-label="Next page"
       >
-        <ChevronRight className="h-4 w-4" />
+        <span className="hidden text-[8px] uppercase tracking-[0.2em] sm:inline">
+          Next
+        </span>
+        <ChevronRight className="size-3.5" />
       </PageLink>
-    </nav>
-  );
-}
+    </div>
+  </nav>
+);
 
 function PageLink({
   href,
@@ -56,19 +81,32 @@ function PageLink({
 } & React.AnchorHTMLAttributes<HTMLAnchorElement>) {
   if (disabled) {
     return (
-      <span className="flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] text-caption-foreground">
+      <span
+        className="
+          flex h-9 min-w-9
+          items-center justify-center gap-2
+          text-muted-foreground/25
+        "
+      >
         {children}
       </span>
     );
   }
+
   return (
     <Link
       href={href}
       className={cn(
-        "flex h-10 w-10 items-center justify-center rounded-[var(--radius-sm)] border text-sm transition-colors",
+        `
+          flex h-9 min-w-9
+          items-center justify-center gap-2
+          border
+          px-2.5
+          transition-all duration-300
+        `,
         active
-          ? "border-primary bg-primary text-primary-foreground"
-          : "border-border-strong text-foreground hover:bg-surface-muted"
+          ? "border-foreground bg-foreground text-background"
+          : "border-transparent text-muted-foreground hover:border-border hover:text-foreground",
       )}
       {...props}
     >
@@ -76,3 +114,5 @@ function PageLink({
     </Link>
   );
 }
+}
+

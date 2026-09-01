@@ -24,22 +24,55 @@ export function PropertyToolbar({ resultCount }: { resultCount: number }) {
     router.push(`${pathname}?${params.toString()}`);
   }
 
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border pb-5">
-      <p className="text-sm text-muted-foreground">
-        <span className="ledger-value text-foreground">{resultCount}</span> properties found
-      </p>
 
-      <div className="flex items-center gap-3">
-        <Button variant="outline" size="sm" className="lg:hidden" onClick={() => setFiltersOpen(true)}>
-          <SlidersHorizontal className="mr-2 h-4 w-4" />
-          Filters
+return (
+  <div className="border-b border-border/70 pb-5">
+    <div className="flex flex-wrap items-center justify-between gap-5">
+      {/* Results */}
+      <div className="flex items-baseline gap-3">
+        <span className="font-mono text-[11px] tabular-nums tracking-[0.08em] text-foreground">
+          {String(resultCount).padStart(2, "0")}
+        </span>
+
+        <span className="text-[9px] uppercase tracking-[0.24em] text-muted-foreground/50">
+          Properties Found
+        </span>
+      </div>
+
+      {/* Controls */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="
+            h-10
+            rounded-none
+            border-border
+            px-4
+            text-[9px]
+            font-medium
+            uppercase
+            tracking-[0.18em]
+            lg:hidden
+          "
+          onClick={() => setFiltersOpen(true)}
+        >
+          <SlidersHorizontal className="mr-2 size-3.5" />
+          Refine
         </Button>
 
         <Select
           value={sort}
           onChange={(e) => updateParam("sort", e.target.value)}
-          className="w-44"
+          className="
+            h-10
+            w-40
+            rounded-none
+            border-border
+            bg-transparent
+            text-[10px]
+            tracking-wide
+          "
           aria-label="Sort properties"
         >
           <option value="newest">Newest first</option>
@@ -48,31 +81,51 @@ export function PropertyToolbar({ resultCount }: { resultCount: number }) {
           <option value="most-viewed">Most viewed</option>
         </Select>
 
-        <div className="hidden items-center rounded-[var(--radius-sm)] border border-border-strong sm:flex">
+        {/* View switch */}
+        <div className="hidden h-10 items-center border border-border sm:flex">
           <button
             type="button"
             aria-label="Grid view"
             aria-pressed={view === "grid"}
             onClick={() => updateParam("view", "grid")}
-            className={cn("flex h-11 w-11 items-center justify-center", view === "grid" && "bg-surface-muted")}
+            className={cn(
+              "flex size-10 items-center justify-center transition-colors",
+              view === "grid"
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
-            <LayoutGrid className="h-4 w-4" />
+            <LayoutGrid className="size-3.5" strokeWidth={1.5} />
           </button>
+
           <button
             type="button"
             aria-label="List view"
             aria-pressed={view === "list"}
             onClick={() => updateParam("view", "list")}
-            className={cn("flex h-11 w-11 items-center justify-center border-l border-border-strong", view === "list" && "bg-surface-muted")}
+            className={cn(
+              "flex size-10 items-center justify-center border-l border-border transition-colors",
+              view === "list"
+                ? "bg-foreground text-background"
+                : "text-muted-foreground hover:text-foreground",
+            )}
           >
-            <List className="h-4 w-4" />
+            <List className="size-3.5" strokeWidth={1.5} />
           </button>
         </div>
       </div>
-
-      <Sheet open={filtersOpen} onClose={() => setFiltersOpen(false)} title="Filters" side="bottom">
-        <PropertyFiltersForm onApply={() => setFiltersOpen(false)} />
-      </Sheet>
     </div>
-  );
+
+    <Sheet
+      open={filtersOpen}
+      onClose={() => setFiltersOpen(false)}
+      title="Refine Selection"
+      side="bottom"
+    >
+      <PropertyFiltersForm onApply={() => setFiltersOpen(false)} />
+    </Sheet>
+  </div>
+);
+
+
 }

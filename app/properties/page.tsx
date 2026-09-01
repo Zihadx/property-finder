@@ -57,28 +57,89 @@ export default async function PropertiesPage({
     return qs ? `/properties?${qs}` : "/properties";
   }
 
-  return (
-    <>
-      <SiteHeader />
-      <main className="mx-auto max-w-7xl px-6 py-10">
-        <div className="mb-8">
-          <p className="ledger-label mb-2">Property Discovery</p>
-          <h1 className="font-display text-3xl text-foreground">Properties for Sale &amp; Rent</h1>
-        </div>
 
-        <div className="flex flex-col gap-8 lg:flex-row">
+return (
+  <>
+    <SiteHeader />
+
+    <main className="min-h-screen bg-background">
+      {/* ─────────────────────────────────────────
+          EDITORIAL PAGE INTRO
+      ───────────────────────────────────────── */}
+
+      <section className="border-b border-border/60">
+        <div className="mx-auto max-w-[1600px] px-6 pb-14 pt-12 sm:px-8 lg:px-12 lg:pb-16 lg:pt-16">
+          <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
+            <div className="max-w-3xl">
+              <div className="mb-6 flex items-center gap-4">
+                <span className="h-px w-10 bg-foreground/40" />
+
+                <p className="text-[9px] font-medium uppercase tracking-[0.34em] text-muted-foreground">
+                  Property Discovery
+                </p>
+              </div>
+
+              <h1 className="max-w-4xl font-display text-4xl font-normal leading-[0.95] tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
+                Exceptional places.
+                <br />
+                <span className="text-muted-foreground/60">
+                  Considered carefully.
+                </span>
+              </h1>
+
+              <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground/70">
+                Explore a curated selection of residences, land and commercial
+                properties across Dhaka&apos;s most distinguished addresses.
+              </p>
+            </div>
+
+            <div className="hidden shrink-0 lg:block">
+              <div className="flex items-center gap-5">
+                <span className="h-px w-16 bg-border" />
+
+                <div className="text-right">
+                  <p className="text-[8px] uppercase tracking-[0.28em] text-muted-foreground/50">
+                    Private Selection
+                  </p>
+
+                  <p className="mt-1 font-mono text-[10px] tabular-nums tracking-[0.16em] text-muted-foreground">
+                    {String(allResults.length).padStart(2, "0")} RESIDENCES
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─────────────────────────────────────────
+          DISCOVERY AREA
+      ───────────────────────────────────────── */}
+
+      <main className="mx-auto max-w-[1600px] px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
+        <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
           <PropertyFiltersSidebar />
 
           <div className="min-w-0 flex-1">
             <PropertyToolbar resultCount={allResults.length} />
-            <div className="mt-6">
+
+            <div className="mt-8">
               <PropertyGrid properties={pageResults} view={view} />
             </div>
-            <Pagination currentPage={currentPage} totalPages={totalPages} buildHref={buildHref} />
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              buildHref={buildHref}
+            />
           </div>
         </div>
       </main>
-      <SiteFooter />
-    </>
-  );
+    </main>
+
+    <SiteFooter />
+  </>
+);
+
+
 }

@@ -72,13 +72,13 @@ export default async function AreaDetailPage({
             priority
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/20 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 mx-auto max-w-7xl px-6 pb-8">
+          <div className="absolute inset-x-0 bottom-0 mx-auto container px-6 pb-8">
             <p className="ledger-label mb-2 text-white/80">Area Guide</p>
             <h1 className="font-display text-4xl text-white">{area.name}</h1>
           </div>
         </section>
 
-        <div className="mx-auto max-w-7xl px-6 py-10">
+        <div className="mx-auto container px-6 py-10">
           <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">
             {area.description}
           </p>

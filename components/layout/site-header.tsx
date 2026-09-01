@@ -1,4 +1,3 @@
-
 "use client";
 
 import * as React from "react";
@@ -61,10 +60,7 @@ export function SiteHeader() {
             BRAND
         ========================================================== */}
 
-        <Link
-          href="/"
-          className="group relative flex items-baseline gap-2"
-        >
+        <Link href="/" className="group relative flex items-baseline gap-2">
           <span
             className="
               font-display text-[22px] font-medium
@@ -283,7 +279,6 @@ export function SiteHeader() {
           >
             <Link href="/properties">
               Browse Properties
-
               <ArrowUpRight
                 className="
                   ml-3 h-3.5 w-3.5
@@ -319,36 +314,9 @@ export function SiteHeader() {
           MOBILE MENU
       ========================================================== */}
 
-      <Dialog
-        open={menuOpen}
-        onClose={() => setMenuOpen(false)}
-        title="Navigation"
-      >
+      <Dialog open={menuOpen} onClose={() => setMenuOpen(false)}>
         <div className="overflow-hidden">
-          {/* Mobile header */}
-          <div className="flex items-center justify-between border-b border-border px-5 py-5">
-            <div>
-              <p className="font-display text-xl tracking-[-0.03em]">
-                ListEasy
-              </p>
-
-              <p className="mt-1 text-[8px] uppercase tracking-[0.25em] text-muted-foreground">
-                Premium Real Estate
-              </p>
-            </div>
-
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-9 w-9 rounded-full"
-              aria-label="Close menu"
-              onClick={() => setMenuOpen(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-
-          {/* Main links */}
+          {/* Main links ======================*/}
           <nav className="p-3">
             {menuLinks.map((link, index) => (
               <Link
@@ -356,33 +324,33 @@ export function SiteHeader() {
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
                 className="
-                  group flex
-                  items-center justify-between
-                  border-b border-border/50
-                  px-4 py-4
-                  transition-colors duration-300
-                  last:border-b-0
-                  hover:bg-surface-muted
-                "
+            group flex
+            items-center justify-between
+            border-b border-border/50
+            px-4 py-4
+            transition-colors duration-300
+            last:border-b-0
+            hover:bg-surface-muted
+          "
               >
                 <div className="flex items-center gap-4">
                   <span
                     className="
-                      text-[8px]
-                      font-medium
-                      tracking-[0.15em]
-                      text-muted-foreground/50
-                    "
+                text-[8px]
+                font-medium
+                tracking-[0.15em]
+                text-muted-foreground/50
+              "
                   >
                     0{index + 1}
                   </span>
 
                   <span
                     className="
-                      text-sm
-                      font-medium
-                      text-foreground
-                    "
+                text-sm
+                font-medium
+                text-foreground
+              "
                   >
                     {link.label}
                   </span>
@@ -390,14 +358,14 @@ export function SiteHeader() {
 
                 <ArrowUpRight
                   className="
-                    h-4 w-4
-                    text-muted-foreground
-                    opacity-0
-                    transition-all duration-300
-                    group-hover:translate-x-0.5
-                    group-hover:-translate-y-0.5
-                    group-hover:opacity-100
-                  "
+              h-4 w-4
+              text-muted-foreground
+              opacity-0
+              transition-all duration-300
+              group-hover:translate-x-0.5
+              group-hover:-translate-y-0.5
+              group-hover:opacity-100
+            "
                 />
               </Link>
             ))}
@@ -409,17 +377,17 @@ export function SiteHeader() {
               href="/properties"
               onClick={() => setMenuOpen(false)}
               className="
-                flex h-12
-                items-center justify-center
-                bg-foreground
-                text-[9px]
-                font-semibold
-                uppercase
-                tracking-[0.2em]
-                text-background
-                transition-opacity
-                hover:opacity-90
-              "
+          flex h-12
+          items-center justify-center
+          bg-foreground
+          text-[9px]
+          font-semibold
+          uppercase
+          tracking-[0.2em]
+          text-background
+          transition-opacity
+          hover:opacity-90
+        "
             >
               Explore Properties
               <ArrowUpRight className="ml-3 h-3.5 w-3.5" />
@@ -441,4 +409,3 @@ export function SiteHeader() {
     </header>
   );
 }
-

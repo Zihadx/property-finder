@@ -9,7 +9,7 @@ export default function PropertyNotFound() {
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto max-w-7xl px-6 py-20">
+      <main className="mx-auto container px-6 py-20">
         <EmptyState
           icon={SearchX}
           title="This listing is no longer available"

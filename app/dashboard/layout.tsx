@@ -1,13 +1,23 @@
+import * as React from "react";
+
 import { DashboardSidebar } from "@/components/dashboard/dashboard-sidebar";
 import { DashboardTopbar } from "@/components/dashboard/dashboard-topbar";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground">
       <DashboardSidebar />
-      <div className="flex min-w-0 flex-1 flex-col">
+
+      <div className="min-w-0 lg:pl-[248px]">
         <DashboardTopbar />
-        <main className="flex-1 px-4 py-6 lg:px-8 lg:py-8">{children}</main>
+
+        <main className="min-h-[calc(100vh-64px)] px-5 py-7 sm:px-7 lg:px-10 lg:py-9">
+          <div className="mx-auto w-full max-w-[1600px]">{children}</div>
+        </main>
       </div>
     </div>
   );

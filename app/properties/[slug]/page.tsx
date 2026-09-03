@@ -1,13 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import {
-  ArrowDown,
-  ArrowUpRight,
-  Check,
-  MapPin,
-  Share2,
-} from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Check, MapPin } from "lucide-react";
 
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -70,6 +65,16 @@ export default async function PropertyDetailPage({
     propertyService.getSimilar(property),
   ]);
 
+  /**
+   * The property's own reference, e.g. "prp-024" → "024".
+   * Carried through the gallery and page header instead of a
+   * hardcoded, meaningless index.
+   */
+  const lotNumber = property.id
+    .replace(/[^0-9]/g, "")
+    .padStart(3, "0")
+    .slice(-3);
+
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "RealEstateListing",
@@ -127,23 +132,22 @@ export default async function PropertyDetailPage({
 
       <SiteHeader />
 
-      <main className="mx-auto w-full container pb-32 lg:pb-16">
+      <main className="mx-auto w-full container px-4 pb-32 lg:pb-16">
         {/* =========================================================
             HERO / PROPERTY INTRO
         ========================================================= */}
 
         <section className="pt-8 sm:pt-10 lg:pt-12">
-          <div className="flex items-center justify-between border-b border-border/50 pb-5">
-            <div className="flex items-center gap-3">
-              <span className="h-px w-8 bg-foreground/40" />
+          <div className="flex items-center justify-between border-b border-border/50 pb-4">
+            <Link
+              href="/properties"
+              className="text-sm text-muted-foreground transition-colors duration-300 hover:text-foreground"
+            >
+              Properties
+            </Link>
 
-              <span className="text-[8px] font-medium uppercase tracking-[0.32em] text-muted-foreground/55">
-                Property Collection
-              </span>
-            </div>
-
-            <span className="hidden font-mono text-[8px] uppercase tracking-[0.18em] text-muted-foreground/35 sm:block">
-              ListEasy BD / {property.type}
+            <span className="text-sm text-muted-foreground">
+              Lot {lotNumber}
             </span>
           </div>
 
@@ -152,7 +156,7 @@ export default async function PropertyDetailPage({
               <div className="mb-4 flex flex-wrap items-center gap-2">
                 <Badge
                   variant={propertyStatusVariant[property.status]}
-                  className="rounded-none px-2.5 py-1 text-[8px] uppercase tracking-[0.16em]"
+                  className="rounded-none px-2.5 py-1 text-[11px] font-medium"
                 >
                   {property.status}
                 </Badge>
@@ -160,7 +164,7 @@ export default async function PropertyDetailPage({
                 {property.featured && (
                   <Badge
                     variant="accent"
-                    className="rounded-none px-2.5 py-1 text-[8px] uppercase tracking-[0.16em]"
+                    className="rounded-none px-2.5 py-1 text-[11px] font-medium"
                   >
                     Featured
                   </Badge>
@@ -168,7 +172,7 @@ export default async function PropertyDetailPage({
 
                 <Badge
                   variant="outline"
-                  className="rounded-none px-2.5 py-1 text-[8px] uppercase tracking-[0.16em]"
+                  className="rounded-none px-2.5 py-1 text-[11px] font-medium"
                 >
                   {property.type}
                 </Badge>
@@ -186,7 +190,7 @@ export default async function PropertyDetailPage({
                     {property.location.address}
                   </p>
 
-                  <p className="mt-1 text-xs text-muted-foreground/55">
+                  <p className="mt-1 text-xs text-muted-foreground/70">
                     {property.location.area}, Dhaka
                   </p>
                 </div>
@@ -208,22 +212,12 @@ export default async function PropertyDetailPage({
 
         <section>
           <div className="relative">
-            <PropertyGallery
-              images={property.images}
-              title={property.title}
-            />
+            <PropertyGallery images={property.images} title={property.title} />
 
-            {/* Gallery index */}
             <div className="pointer-events-none absolute bottom-4 left-4 hidden sm:block">
-              <div className="flex items-center gap-3 border border-white/15 bg-black/25 px-3 py-2 backdrop-blur-md">
-                <span className="font-mono text-[8px] tracking-[0.2em] text-white/75">
-                  01
-                </span>
-
-                <span className="h-px w-6 bg-white/25" />
-
-                <span className="text-[8px] uppercase tracking-[0.2em] text-white/55">
-                  Gallery
+              <div className="border border-white/20 bg-black/30 px-3 py-1.5 backdrop-blur-md">
+                <span className="font-display text-[12px] italic leading-none text-white">
+                  Lot {lotNumber}
                 </span>
               </div>
             </div>
@@ -240,12 +234,17 @@ export default async function PropertyDetailPage({
           --------------------------------------------------------- */}
 
           <div className="min-w-0">
-            {/* Price + intro */}
-            <div className="grid gap-8 border-b border-border/50 pb-10 sm:grid-cols-[1fr_auto] sm:items-end">
+            {/* 01 — Overview */}
+            <div className="grid gap-6 border-b border-border/50 pb-10 sm:grid-cols-[1fr_auto] sm:items-end">
               <div>
-                <span className="mb-3 block text-[8px] font-medium uppercase tracking-[0.3em] text-muted-foreground/45">
-                  Asking Price
-                </span>
+                <div className="mb-4 flex items-baseline gap-3">
+                  <span className="font-display text-sm text-accent-strong">
+                    01
+                  </span>
+                  <h2 className="font-display text-lg tracking-[-0.02em] text-foreground">
+                    Overview
+                  </h2>
+                </div>
 
                 <PropertyPrice
                   price={property.price}
@@ -254,42 +253,43 @@ export default async function PropertyDetailPage({
                 />
               </div>
 
-              <div className="flex items-center gap-3 text-[9px] uppercase tracking-[0.2em] text-muted-foreground/40">
-                <span className="h-px w-8 bg-border" />
-                <span>
-                  {property.purpose === "Rent"
-                    ? "Available for rent"
-                    : "Available for purchase"}
-                </span>
-              </div>
+              <p className="text-sm text-muted-foreground sm:text-right">
+                {property.purpose === "Rent"
+                  ? "Available for rent"
+                  : "Available for purchase"}
+              </p>
             </div>
 
-            {/* Specs */}
+            {/* 02 — Details */}
             <div className="py-10">
-              <div className="mb-7 flex items-center gap-4">
-                <span className="text-[8px] font-medium uppercase tracking-[0.3em] text-muted-foreground/45">
-                  Property Details
+              <div className="mb-7 flex items-baseline gap-3">
+                <span className="font-display text-sm text-accent-strong">
+                  02
                 </span>
-
-                <span className="h-px flex-1 bg-border/60" />
+                <h2 className="font-display text-lg tracking-[-0.02em] text-foreground">
+                  Property details
+                </h2>
               </div>
 
               <PropertySpecs property={property} />
             </div>
 
-            {/* Description */}
+            {/* 03 — The residence */}
             <section className="border-t border-border/50 py-10">
-              <div className="grid gap-8 lg:grid-cols-[180px_1fr]">
-                <div>
-                  <span className="text-[8px] font-medium uppercase tracking-[0.3em] text-muted-foreground/45">
-                    The Residence
+              <div className="grid gap-6 lg:grid-cols-[180px_1fr] lg:gap-8">
+                <div className="flex items-baseline gap-3 lg:flex-col lg:items-start lg:gap-2">
+                  <span className="font-display text-sm text-accent-strong">
+                    03
+                  </span>
+                  <span className="text-sm text-muted-foreground">
+                    The residence
                   </span>
                 </div>
 
                 <div>
-                  <h2 className="max-w-xl font-display text-2xl leading-tight tracking-[-0.025em] text-foreground sm:text-3xl">
+                  <h2 className="max-w-xl font-display text-2xl leading-tight tracking-tight text-foreground sm:text-3xl">
                     A considered address in{" "}
-                    <span className="text-muted-foreground/45">
+                    <span className="text-muted-foreground">
                       {property.location.area}.
                     </span>
                   </h2>
@@ -301,35 +301,29 @@ export default async function PropertyDetailPage({
               </div>
             </section>
 
-            {/* Amenities */}
+            {/* 04 — Amenities */}
             <section className="border-t border-border/50 py-10">
-              <div className="mb-7 flex items-center justify-between">
-                <span className="text-[8px] font-medium uppercase tracking-[0.3em] text-muted-foreground/45">
-                  Amenities & Features
+              <div className="mb-7 flex items-baseline gap-3">
+                <span className="font-display text-sm text-accent-strong">
+                  04
                 </span>
-
-                <span className="font-mono text-[8px] tracking-[0.15em] text-muted-foreground/30">
-                  SELECTED
-                </span>
+                <h2 className="font-display text-lg tracking-[-0.02em] text-foreground">
+                  Amenities & features
+                </h2>
               </div>
 
               <PropertyAmenities amenities={property.amenities} />
             </section>
 
-            {/* Location */}
+            {/* 05 — Location */}
             <section className="border-t border-border/50 py-10">
-              <div className="mb-7 flex items-end justify-between gap-4">
-                <div>
-                  <span className="mb-2 block text-[8px] font-medium uppercase tracking-[0.3em] text-muted-foreground/45">
-                    Location
-                  </span>
-
-                  <h2 className="font-display text-2xl tracking-[-0.025em] text-foreground">
-                    {property.location.area}
-                  </h2>
-                </div>
-
-                <ArrowDown className="hidden h-4 w-4 text-muted-foreground/30 sm:block" />
+              <div className="mb-7 flex items-baseline gap-3">
+                <span className="font-display text-sm text-accent-strong">
+                  05
+                </span>
+                <h2 className="font-display text-lg tracking-[-0.02em] text-foreground">
+                  {property.location.area}
+                </h2>
               </div>
 
               <PropertyLocationMap
@@ -348,49 +342,28 @@ export default async function PropertyDetailPage({
             <div className="sticky top-24">
               {agent && (
                 <div className="overflow-hidden border border-border/70 bg-card">
-                  {/* Agent header */}
-                  <div className="border-b border-border/60 px-5 py-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[8px] font-medium uppercase tracking-[0.28em] text-muted-foreground/45">
-                        Represented By
-                      </span>
-
-                      <span className="font-mono text-[8px] tracking-[0.15em] text-muted-foreground/30">
-                        AGENT
-                      </span>
-                    </div>
-                  </div>
-
                   {/* Agent identity */}
-                  <div className="p-5">
-                    <div className="flex items-center gap-4">
-                      <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-border">
-                        <Image
-                          src={agent.photo}
-                          alt={agent.name}
-                          fill
-                          sizes="56px"
-                          className="object-cover"
-                        />
-                      </div>
-
-                      <div className="min-w-0">
-                        <h3 className="truncate font-display text-lg text-foreground">
-                          {agent.name}
-                        </h3>
-
-                        <p className="mt-0.5 text-[9px] uppercase tracking-[0.18em] text-muted-foreground/50">
-                          {agent.position}
-                        </p>
-                      </div>
+                  <div className="flex items-center gap-4 p-5">
+                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-border">
+                      <Image
+                        src={agent.photo}
+                        alt={agent.name}
+                        fill
+                        sizes="56px"
+                        className="object-cover"
+                      />
                     </div>
 
-                    <div className="mt-5 flex items-center gap-2 border-t border-border/50 pt-4">
-                      <span className="h-1.5 w-1.5 rounded-full bg-foreground/50" />
-
-                      <span className="text-[9px] uppercase tracking-[0.18em] text-muted-foreground/50">
-                        Local property specialist
-                      </span>
+                    <div className="min-w-0">
+                      <p className="text-[11px] text-muted-foreground">
+                        Listed by
+                      </p>
+                      <h3 className="truncate font-display text-lg text-foreground">
+                        {agent.name}
+                      </h3>
+                      <p className="mt-0.5 text-[12px] text-muted-foreground">
+                        {agent.position}
+                      </p>
                     </div>
                   </div>
 
@@ -404,30 +377,28 @@ export default async function PropertyDetailPage({
                   </div>
 
                   {/* Bottom detail */}
-                  <div className="border-t border-border/60 px-5 py-4">
-                    <div className="grid grid-cols-2 divide-x divide-border/60">
-                      <div className="pr-4">
-                        <span className="block text-[8px] uppercase tracking-[0.2em] text-muted-foreground/40">
-                          Experience
-                        </span>
+                  <div className="grid grid-cols-2 divide-x divide-border/60 border-t border-border/60">
+                    <div className="px-5 py-4">
+                      <span className="block text-[11px] text-muted-foreground">
+                        Experience
+                      </span>
 
-                        <span className="mt-1 block font-display text-lg text-foreground">
-                          {agent.experienceYears}
-                          <span className="ml-1 text-xs text-muted-foreground/50">
-                            yrs
-                          </span>
+                      <span className="mt-1 block font-display text-lg text-foreground">
+                        {agent.experienceYears}
+                        <span className="ml-1 text-xs text-muted-foreground">
+                          yrs
                         </span>
-                      </div>
+                      </span>
+                    </div>
 
-                      <div className="pl-4">
-                        <span className="block text-[8px] uppercase tracking-[0.2em] text-muted-foreground/40">
-                          Response
-                        </span>
+                    <div className="px-5 py-4">
+                      <span className="block text-[11px] text-muted-foreground">
+                        Responds in
+                      </span>
 
-                        <span className="mt-1 block text-xs text-foreground/75">
-                          {agent.responseTime}
-                        </span>
-                      </div>
+                      <span className="mt-1 block text-sm text-foreground/80">
+                        {agent.responseTime}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -440,32 +411,15 @@ export default async function PropertyDetailPage({
             TRUST / PROPERTY NOTE
         ========================================================= */}
 
-        <section className="mt-8 border-y border-border/50 py-6">
-          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-3">
-              <span className="flex h-7 w-7 items-center justify-center rounded-full border border-border">
-                <Check className="h-3.5 w-3.5 text-foreground/65" />
-              </span>
+        <section className="mt-8 flex items-center gap-3 border-y border-border/50 py-6">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-border">
+            <Check className="h-3.5 w-3.5 text-foreground/70" />
+          </span>
 
-              <div>
-                <p className="text-[9px] font-medium uppercase tracking-[0.22em] text-foreground/70">
-                  Curated Listing
-                </p>
-
-                <p className="mt-0.5 text-xs text-muted-foreground/50">
-                  Verified property information supplied by ListEasy BD.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-5">
-              <span className="hidden h-px w-10 bg-border sm:block" />
-
-              <span className="font-mono text-[8px] tracking-[0.18em] text-muted-foreground/35">
-                LISTEASY / BD
-              </span>
-            </div>
-          </div>
+          <p className="text-sm text-muted-foreground">
+            Verified property information, curated and confirmed by ListEasy
+            BD.
+          </p>
         </section>
 
         {/* =========================================================
@@ -473,37 +427,22 @@ export default async function PropertyDetailPage({
         ========================================================= */}
 
         <section className="pt-16 lg:pt-20">
-          <div className="mb-8 flex items-end justify-between">
-            <div>
-              <div className="mb-3 flex items-center gap-3">
-                <span className="h-px w-7 bg-foreground/30" />
+          <div className="mb-8 flex items-end justify-between gap-4 border-b border-border/50 pb-4">
+            <h2 className="font-display text-3xl tracking-[-0.03em] text-foreground sm:text-4xl">
+              Similar residences
+            </h2>
 
-                <span className="text-[8px] font-medium uppercase tracking-[0.3em] text-muted-foreground/45">
-                  Continue Exploring
-                </span>
-              </div>
-
-              <h2 className="font-display text-3xl tracking-[-0.035em] text-foreground sm:text-4xl">
-                Similar residences
-              </h2>
-            </div>
-
-            <ArrowUpRight className="mb-1 hidden h-5 w-5 text-muted-foreground/35 sm:block" />
+            <Link
+              href="/properties"
+              className="hidden items-center gap-1.5 text-sm font-medium text-muted-foreground transition-colors duration-300 hover:text-foreground sm:flex"
+            >
+              View all
+              <ArrowUpRight className="h-3.5 w-3.5" />
+            </Link>
           </div>
 
           <SimilarProperties properties={similar} />
         </section>
-
-        {/* Editorial closing line */}
-        <div className="mt-20 flex items-center gap-5">
-          <span className="h-px flex-1 bg-border/50" />
-
-          <span className="text-[7px] font-medium uppercase tracking-[0.3em] text-muted-foreground/30">
-            Selected property · Dhaka
-          </span>
-
-          <span className="h-px flex-1 bg-border/50" />
-        </div>
       </main>
 
       {/* Mobile contact */}

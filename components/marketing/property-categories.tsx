@@ -1,9 +1,7 @@
 import { propertyService } from "@/services/property.service";
 import { SectionHeading } from "./section-heading";
-
 import type { PropertyType } from "@/types/property";
 import { PropertyCategorySlider } from "./property-category-slider";
-
 
 export const categories: {
   title: string;
@@ -55,7 +53,7 @@ export async function PropertyCategories() {
         count: matches.length,
         image: matches[0]?.images?.[0],
       };
-    }),
+    })
   );
 
   return (
@@ -66,9 +64,8 @@ export async function PropertyCategories() {
         className="
           pointer-events-none absolute
           -right-40 top-10
-          h-125 w-125
+          h-[500px] w-[500px]
           rounded-full
-         
           blur-[140px]
         "
       />
@@ -78,9 +75,8 @@ export async function PropertyCategories() {
         className="
           pointer-events-none absolute
           -left-48 bottom-0
-          h-100 w-100
+          h-[400px] w-[400px]
           rounded-full
-   
           blur-[120px]
         "
       />

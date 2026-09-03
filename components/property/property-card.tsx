@@ -16,64 +16,42 @@ import { PropertyQuickView } from "./property-quick-view";
 import type { Property } from "@/types/property";
 
 const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 45, scale: 0.97 },
+  hidden: { opacity: 0, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
-    scale: 1,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] },
+    transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
   },
 };
-const imageVariants: Variants = {
-  hidden: { scale: 1.08, opacity: 0.7 },
-  visible: {
-    scale: 1,
-    opacity: 1,
-    transition: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-  },
-};
-const contentContainer: Variants = {
-  hidden: {},
-  visible: { transition: { delayChildren: 0.15, staggerChildren: 0.07 } },
-};
-const contentItem: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] },
-  },
-};
+
 export function PropertyCard({ property }: { property: Property }) {
   const [quickViewOpen, setQuickViewOpen] = React.useState(false);
+
+  /**
+   * The property's own reference, e.g. "prp-024" → "024".
+   * Shown in place of a generic index so every card carries its
+   * real identity rather than its position in the grid.
+   */
+  const lotNumber = property.id
+    .replace(/[^0-9]/g, "")
+    .padStart(3, "0")
+    .slice(-3);
 
   return (
     <motion.article
       variants={cardVariants}
       initial="hidden"
       whileInView="visible"
-      viewport={{
-        once: true,
-        amount: 0.18,
-        margin: "0px 0px -60px 0px",
-      }}
-      whileHover={{
-        y: -6,
-        transition: {
-          duration: 0.45,
-          ease: [0.22, 1, 0.36, 1],
-        },
-      }}
+      viewport={{ once: true, amount: 0.2, margin: "0px 0px -60px 0px" }}
       className="
-      
         group relative flex h-full flex-col
         overflow-hidden
         border border-border/70
         bg-surface
-        transition-[box-shadow,border-color]
-        duration-700
+        transition-[border-color,box-shadow]
+        duration-500
         hover:border-border
-        hover:shadow-[0_30px_80px_-35px_rgba(0,0,0,0.3)]
+        hover:shadow-xl
       "
     >
       {/* =========================================================
@@ -86,132 +64,76 @@ export function PropertyCard({ property }: { property: Property }) {
           className="block"
           aria-label={`View ${property.title}`}
         >
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, amount: 0.3 }}
-            className="
-              relative
-              aspect-4/3
-              overflow-hidden
-              bg-surface-muted
-            "
-          >
-            <motion.div variants={imageVariants} className="absolute inset-0">
-              <Image
-                src={property.images[0]}
-                alt={property.title}
-                fill
-                sizes="
-                  (min-width: 1280px) 25vw,
-                  (min-width: 1024px) 33vw,
-                  (min-width: 640px) 50vw,
-                  100vw
-                "
-                className="
-                  object-cover
-                  transition-transform
-                  duration-1400
-                  ease-[cubic-bezier(0.22,1,0.36,1)]
-                  group-hover:scale-[1.055]
-                "
-              />
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0.45 }}
-              whileInView={{ opacity: 0.8 }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2 }}
-              aria-hidden="true"
+          <div className="relative aspect-4/3 overflow-hidden bg-surface-muted">
+            <Image
+              src={property.images[0]}
+              alt={property.title}
+              fill
+              sizes="
+                (min-width: 1280px) 25vw,
+                (min-width: 1024px) 33vw,
+                (min-width: 640px) 50vw,
+                100vw
+              "
               className="
-                pointer-events-none
-                absolute inset-0
-                bg-linear-to-t
-                from-black/70
-                via-black/10
-                to-black/5
+                object-cover
+                transition-transform
+                duration-1000
+                ease-[cubic-bezier(0.22,1,0.36,1)]
+                group-hover:scale-[1.05]
               "
             />
 
-            {/* Top highlight */}
             <div
               aria-hidden="true"
               className="
                 pointer-events-none
                 absolute inset-0
-                bg-linear-to-br
-                from-white/10
-                via-transparent
+                bg-linear-to-t
+                from-black/65
+                via-black/5
                 to-transparent
               "
             />
 
             {/* Status */}
-            <motion.div
-              initial={{ opacity: 0, x: -15 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                delay: 0.25,
-                duration: 0.6,
-                ease: [0.22, 1, 0.36, 1],
-              }}
-              className="absolute left-4 top-4 z-10"
-            >
+            <div className="absolute left-4 top-4 z-10">
               <PropertyStatusBadges property={property} />
-            </motion.div>
+            </div>
 
-            {/* Image counter */}
-            {property.images.length > 1 && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  delay: 0.35,
-                  duration: 0.5,
-                }}
-                className="
-                  absolute bottom-4 right-4 z-10
-                  border border-white/20
-                  bg-black/20
-                  px-2.5 py-1.5
-                  text-[8px]
-                  font-medium
-                  uppercase
-                  tracking-[0.2em]
-                  text-white/80
-                  backdrop-blur-xl
-                "
-              >
-                01 / {String(property.images.length).padStart(2, "0")}
-              </motion.div>
-            )}
+            {/* Lot stamp — the property's real reference, not a grid index */}
+            <div
+              className="
+                absolute bottom-4 right-4 z-10
+                flex flex-col items-end
+                border border-white/25
+                bg-black/25
+                px-2.5 py-1.5
+                text-right
+                backdrop-blur-md
+              "
+            >
+              <span className="font-display text-[11px] italic leading-none text-white">
+                Lot {lotNumber}
+              </span>
+              {property.images.length > 1 && (
+                <span className="mt-0.5 text-[9px] leading-none text-white/60">
+                  {property.images.length} photos
+                </span>
+              )}
+            </div>
 
             {/* Location */}
-            <motion.div
-              initial={{ opacity: 0, x: -15 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{
-                delay: 0.4,
-                duration: 0.55,
-              }}
+            <div
               className="
                 absolute bottom-4 left-4 z-10
-                flex items-center gap-2
-                text-[9px]
-                font-medium
-                uppercase
-                tracking-[0.18em]
-                text-white/85
+                flex items-center gap-1.5
+                text-[11px] text-white/90
               "
             >
               <MapPin className="h-3 w-3 text-white/70" />
-
               {property.location.area}
-            </motion.div>
+            </div>
 
             {/* Quick View */}
             <button
@@ -221,221 +143,123 @@ export function PropertyCard({ property }: { property: Property }) {
                 setQuickViewOpen(true);
               }}
               className="
-                absolute
-                inset-x-4
-                bottom-4
-                z-20
-                flex
-                h-10
-                translate-y-3
-                items-center
-                justify-center
-                gap-2
-                border
-                border-white/20
-                bg-black/25
-                text-[9px]
-                font-semibold
-                uppercase
-                tracking-[0.2em]
+                absolute inset-x-4 bottom-16 z-20
+                flex h-10
+                translate-y-2
+                items-center justify-center gap-2
+                border border-white/20
+                bg-black/30
+                text-[11px] font-medium
                 text-white
                 opacity-0
-                backdrop-blur-xl
-                transition-all
-                duration-500
+                backdrop-blur-md
+                transition-all duration-400
                 group-hover:translate-y-0
                 group-hover:opacity-100
-                hover:bg-black/40
+                hover:bg-black/45
               "
             >
               <Eye className="h-3.5 w-3.5" />
-              Quick View
-              <ArrowUpRight className="ml-1 h-3 w-3" />
+              Quick view
             </button>
-          </motion.div>
+          </div>
         </Link>
 
         {/* Actions */}
-        <motion.div
-          initial={{ opacity: 0, x: 15 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
-          transition={{
-            delay: 0.3,
-            duration: 0.55,
-          }}
-          className="
-            absolute
-            right-4
-            top-4
-            z-20
-            flex
-            flex-col
-            gap-2
-          "
-        >
+        <div className="absolute right-4 top-4 z-20 flex flex-col gap-2">
           <PropertyFavoriteButton propertyId={property.id} />
-
           <PropertyCompareButton propertyId={property.id} />
-        </motion.div>
+        </div>
       </div>
 
       {/* =========================================================
           CONTENT
       ========================================================== */}
 
-      <motion.div
-        variants={contentContainer}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{
-          once: true,
-          amount: 0.15,
-          margin: "0px 0px -40px 0px",
-        }}
-        className="flex flex-1 flex-col p-5 md:p-6"
-      >
-        {/* Type */}
-        <motion.div
-          variants={contentItem}
-          className="mb-3 flex items-center justify-between"
-        >
-          <span
-            className="
-              text-[8px]
-              font-semibold
-              uppercase
-              tracking-[0.24em]
-              text-accent-strong
-            "
-          >
+      <div className="flex flex-1 flex-col p-5 md:p-6">
+        {/* Type · purpose */}
+        <div className="mb-2.5 flex items-center justify-between">
+          <span className="text-[11px] font-medium text-accent-strong">
             {property.type}
           </span>
+          <span className="text-[11px] text-muted-foreground/60">
+            {property.purpose}
+          </span>
+        </div>
+
+        {/* Title */}
+        <Link href={`/properties/${property.slug}`} className="group/title">
+          <h3
+            className="
+              max-w-[92%]
+              font-display
+              text-[21px]
+              font-normal
+              leading-[1.05]
+              tracking-[-0.03em]
+              text-foreground
+              transition-colors
+              duration-300
+              group-hover/title:text-accent-strong
+            "
+          >
+            {property.title}
+          </h3>
+        </Link>
+
+        {/* Address */}
+        <p className="mt-2 line-clamp-1 text-[12px] leading-5 text-muted-foreground">
+          {property.location.address}
+        </p>
+
+        <div className="my-5 h-px bg-border/70" />
+
+        <PropertyPrice price={property.price} purpose={property.purpose} />
+
+        <PropertyFacts
+          property={property}
+          className="mt-5 border-t border-border/60 pt-4"
+        />
+
+        {/* Bottom CTA */}
+        <Link
+          href={`/properties/${property.slug}`}
+          className="
+            group/details
+            mt-6
+            flex items-center justify-between
+            border-t border-border/60
+            pt-4
+            text-[12px] font-medium
+            text-muted-foreground
+            transition-colors duration-300
+            hover:text-foreground
+          "
+        >
+          <span>View property</span>
 
           <span
             className="
-              text-[8px]
-              uppercase
-              tracking-[0.18em]
-              text-muted-foreground/45
+              flex h-7 w-7
+              items-center justify-center
+              border border-border
+              transition-all duration-400
+              group-hover/details:border-foreground
+              group-hover/details:bg-foreground
+              group-hover/details:text-background
             "
           >
-            {property.purpose}
+            <ArrowUpRight
+              className="
+                h-3.5 w-3.5
+                transition-transform duration-400
+                group-hover/details:translate-x-0.5
+                group-hover/details:-translate-y-0.5
+              "
+            />
           </span>
-        </motion.div>
-
-        {/* Title */}
-        <motion.div variants={contentItem}>
-          <Link href={`/properties/${property.slug}`} className="group/title">
-            <h3
-              className="
-                max-w-[92%]
-                font-display
-                text-[21px]
-                font-normal
-                leading-[1.05]
-                tracking-[-0.04em]
-                text-foreground
-                transition-colors
-                duration-300
-                group-hover/title:text-accent-strong
-              "
-            >
-              {property.title}
-            </h3>
-          </Link>
-        </motion.div>
-
-        {/* Address */}
-        <motion.p
-          variants={contentItem}
-          className="
-            mt-2
-            line-clamp-1
-            text-[11px]
-            leading-5
-            text-muted-foreground
-          "
-        >
-          {property.location.address}
-        </motion.p>
-
-        {/* Divider */}
-        <motion.div variants={contentItem} className="my-5 h-px bg-border/70" />
-
-        {/* Price */}
-        <motion.div variants={contentItem}>
-          <PropertyPrice price={property.price} purpose={property.purpose} />
-        </motion.div>
-
-        {/* Facts */}
-        <motion.div variants={contentItem}>
-          <PropertyFacts
-            property={property}
-            className="
-              mt-5
-              border-t
-              border-border/60
-              pt-4
-            "
-          />
-        </motion.div>
-
-        {/* Bottom CTA */}
-        <motion.div variants={contentItem}>
-          <Link
-            href={`/properties/${property.slug}`}
-            className="
-              group/details
-              mt-6
-              flex
-              items-center
-              justify-between
-              border-t
-              border-border/60
-              pt-4
-              text-[9px]
-              font-semibold
-              uppercase
-              tracking-[0.2em]
-              text-muted-foreground
-              transition-colors
-              duration-300
-              hover:text-foreground
-            "
-          >
-            <span>View property</span>
-
-            <span
-              className="
-                flex
-                h-7
-                w-7
-                items-center
-                justify-center
-                border
-                border-border
-                transition-all
-                duration-500
-                group-hover/details:border-foreground
-                group-hover/details:bg-foreground
-                group-hover/details:text-background
-              "
-            >
-              <ArrowUpRight
-                className="
-                  h-3.5
-                  w-3.5
-                  transition-transform
-                  duration-500
-                  group-hover/details:translate-x-0.5
-                  group-hover/details:-translate-y-0.5
-                "
-              />
-            </span>
-          </Link>
-        </motion.div>
-      </motion.div>
+        </Link>
+      </div>
 
       <PropertyQuickView
         property={property}

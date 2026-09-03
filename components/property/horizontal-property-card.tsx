@@ -16,10 +16,10 @@ import type { Property } from "@/types/property";
  */
 export function HorizontalPropertyCard({ property }: { property: Property }) {
   return (
-    <article className="group flex flex-col gap-4 overflow-hidden rounded-[var(--radius-md)] border border-border bg-surface p-3 transition-shadow hover:shadow-[var(--shadow-md)] sm:flex-row">
+    <article className="group flex flex-col gap-4 overflow-hidden rounded-md border border-border bg-surface p-3 transition-shadow hover:shadow-(--shadow-md) sm:flex-row">
       <Link
         href={`/properties/${property.slug}`}
-        className="relative block h-48 shrink-0 overflow-hidden rounded-[var(--radius-sm)] sm:h-auto sm:w-64"
+        className="relative block h-48 shrink-0 overflow-hidden rounded-md sm:h-auto sm:w-64"
       >
         <Image
           src={property.images[0]}

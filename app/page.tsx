@@ -4,37 +4,49 @@ import { Hero } from "@/components/marketing/hero";
 import { FeaturedProperties } from "@/components/marketing/featured-properties";
 import { PopularAreas } from "@/components/marketing/popular-areas";
 import { PropertyCategories } from "@/components/marketing/property-categories";
-import { HowItWorks } from "@/components/marketing/how-it-works";
 import { ShortlistPreview } from "@/components/marketing/shortlist-preview";
 import { AgentDiscovery } from "@/components/marketing/agent-discovery";
 import { NewListings } from "@/components/marketing/new-listings";
-import { PropertyInsights } from "@/components/marketing/property-insights";
 import { AreaSeoLinks } from "@/components/marketing/area-seo-links";
 import { CustomerStories } from "@/components/marketing/customer-stories";
 import { OwnerConversion } from "@/components/marketing/owner-conversion";
-import { AgentConversion } from "@/components/marketing/agent-conversion";
-import { WhyListEasy } from "@/components/marketing/why-listeasy";
 import { FinalCta } from "@/components/marketing/final-cta";
 
 export default function HomePage() {
   return (
     <>
-      <SiteHeader />
+    {/* Hero → Featured listings → Categories → Just listed → Area teaser (with link) → Agent teaser (with link) → One seller CTA banner → Testimonials → Closing CTA → Footer. */}
+
+     <SiteHeader />
       <main>
         <Hero />
         <FeaturedProperties />
-        <PopularAreas />
+        <PopularAreas />           
+        {/* keep — acts as area teaser, don't also need full AreaSeoLinks section here */}
         <PropertyCategories />
-        <HowItWorks />
-        <ShortlistPreview />
-        <AgentDiscovery />
+
+
+        <ShortlistPreview /> 
+
+        {/* ============cut — check if this duplicates FeaturedProperties; if it's a genuinely different feature (saved/compare), keep but move below NewListings */}
+
+        <AgentDiscovery /> 
+
+        {/* ============move to /agents — replace with a 2-3 agent teaser card + "Meet all agents" link, or cut entirely from homepage */}
+
         <NewListings />
-        <PropertyInsights />
-        <AreaSeoLinks />
+
+        <AreaSeoLinks />     
+
+        {/* ===========move to /areas — full list belongs there, not homepage; keep for SEO on its own route */}
+
         <CustomerStories />
-        <OwnerConversion />
-        <AgentConversion />
-        <WhyListEasy />
+        <OwnerConversion />  
+
+        {/*============ keep — this becomes your ONE seller CTA banner on homepage, linking to /list-your-property */}
+
+
+        {/*============= merge into /list-your-property page, not homepage */}
         <FinalCta />
       </main>
       <SiteFooter />

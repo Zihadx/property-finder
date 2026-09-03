@@ -22,18 +22,10 @@ export async function PopularAreas() {
 
   return (
     <section className="relative overflow-hidden  text-black">
-      {/* Ambient architectural light */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -left-40 top-20 h-125 w-125 rounded-full bg-[#2095AE]/[0.07] blur-[140px]"
-      />
 
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-40 bottom-0 h-125 w-125 rounded-full bg-white/2.5 blur-[140px]"
-      />
+  
 
-      <div className="relative mx-auto max-w-[1600px] px-6 py-20 sm:px-8 lg:px-12 lg:py-28">
+      <div className="relative mx-auto max-w-[1600px] px-6 pb-20 sm:px-8 lg:px-12 lg:pb-28">
         {/* Editorial heading */}
         <SectionHeading
           eyebrow="Explore by location"

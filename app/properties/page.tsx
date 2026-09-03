@@ -119,6 +119,7 @@ return (
       <main className="mx-auto max-w-[1600px] px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
         <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
           <PropertyFiltersSidebar />
+          
 
           <div className="min-w-0 flex-1">
             <PropertyToolbar resultCount={allResults.length} />

@@ -4,6 +4,7 @@ import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
 import { AreaCard } from "@/components/property/area-card";
 import { areaService } from "@/services/area.service";
+import { AreaSeoLinks } from "@/components/marketing/area-seo-links";
 
 export const metadata: Metadata = {
   title: "Areas in Dhaka",
@@ -88,6 +89,7 @@ export default async function AreasPage() {
           </div>
         )}
       </main>
+      <AreaSeoLinks />
 
       <SiteFooter />
     </>

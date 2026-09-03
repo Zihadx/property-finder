@@ -25,11 +25,10 @@ export function AgentCard({ agent, listingCount, index = 0 }: AgentCardProps) {
         delay: index * 0.06,
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="group"
+      className="group py-8"
     >
-      {" "}
       <div className="relative overflow-hidden rounded-xl border border-border/70 bg-background p-3.5 transition-all duration-500 hover:-translate-y-0.5 hover:border-foreground/20 hover:shadow-[0_16px_40px_-24px_rgba(0,0,0,0.3)]">
-        {/* Subtle hover accent */}{" "}
+        {/* Subtle hover accent */}
         <div className="absolute inset-x-0 top-0 h-px origin-left scale-x-0 bg-foreground transition-transform duration-500 group-hover:scale-x-100" />
         {/* Profile */}
         <div className="flex items-center gap-3">

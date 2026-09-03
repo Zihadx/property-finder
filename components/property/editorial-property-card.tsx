@@ -31,7 +31,7 @@ export function EditorialPropertyCard({
         delay: Math.min(index * 0.06, 0.35),
         ease: [0.22, 1, 0.36, 1],
       }}
-      className="shrink-0"
+      className="shrink-0 py-10"
     >
       <Link
         href={`/properties/${property.slug}`}
@@ -52,6 +52,7 @@ export function EditorialPropertyCard({
     hover:shadow-black/10
     sm:w-64
     lg:w-68
+   
   "
       >
         {/* Image */}

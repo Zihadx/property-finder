@@ -30,6 +30,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="min-h-full flex flex-col font-sans">
         <ReduxProvider>
           {children}
+          
           <CompareBar />
           <Toaster position="bottom-right" richColors closeButton />
         </ReduxProvider>

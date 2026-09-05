@@ -15,7 +15,7 @@ export function ProjectCard({ project }: { project: Project }) {
       aria-label={`View ${project.name}`}
     >
       {/* Image */}
-      <div className="relative aspect-[4/3] overflow-hidden bg-muted">
+      <div className="relative aspect-4/3 overflow-hidden bg-muted">
         <Image
           src={project.images[0]}
           alt={project.name}
@@ -25,7 +25,7 @@ export function ProjectCard({ project }: { project: Project }) {
         />
 
         {/* Cinematic overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-black/10 opacity-70 transition-opacity duration-500 group-hover:opacity-100" />
+        <div className="absolute inset-0 bg-linear-to-t from-black/45 via-transparent to-black/10 opacity-70 transition-opacity duration-500 group-hover:opacity-100" />
 
         {/* Construction status */}
         <div className="absolute left-4 top-4">
@@ -52,7 +52,7 @@ export function ProjectCard({ project }: { project: Project }) {
 
       {/* Content */}
       <div className="pt-5">
-        <h3 className="font-display text-2xl leading-tight tracking-[-0.025em] text-foreground transition-colors duration-300 group-hover:text-foreground/75">
+        <h3 className="font-display text-2xl leading-tight tracking-tight text-foreground transition-colors duration-300 group-hover:text-foreground/75">
           {project.name}
         </h3>
 

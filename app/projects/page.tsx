@@ -2,18 +2,21 @@ import type { Metadata } from "next";
 
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
+import { Pagination } from "@/components/ui/pagination";
 
-import { projectService } from "@/services/project.service";
-
-import { ProjectCard } from "@/components/project/project-card";
 import { ProjectFiltersSidebar } from "@/components/project/project-filters-sidebar";
 import { ProjectToolbar } from "@/components/project/project-toolbar";
+import { ProjectGrid } from "@/components/project/project-grid";
+
+import { projectService, type ProjectSort } from "@/services/project.service";
 
 export const metadata: Metadata = {
   title: "New Developer Projects in Dhaka",
   description:
     "Browse upcoming and under-construction residential projects from trusted developers across Dhaka.",
 };
+
+const PAGE_SIZE = 9;
 
 interface ProjectsPageProps {
   searchParams: Promise<{
@@ -26,124 +29,47 @@ interface ProjectsPageProps {
     handover?: string;
     sort?: string;
     view?: string;
+    page?: string;
   }>;
 }
 
-export default async function ProjectsPage({
-  searchParams,
-}: ProjectsPageProps) {
+export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
   const params = await searchParams;
 
-  const projects = await projectService.list();
+  const query = params.q?.trim() || undefined;
+  const area = params.area?.trim() || undefined;
+  const minPrice = params.minPrice ? Number(params.minPrice) : undefined;
+  const maxPrice = params.maxPrice ? Number(params.maxPrice) : undefined;
+  const bedrooms = params.bedrooms ? Number(params.bedrooms) : undefined;
+  const sort = (params.sort as ProjectSort) ?? "newest";
+  const view = params.view === "list" ? "list" : "grid";
 
-  const query = params.q?.trim().toLowerCase() ?? "";
-  const area = params.area?.trim().toLowerCase() ?? "";
-  const bedrooms = Number(params.bedrooms ?? 0);
+  const rawPage = Number(params.page ?? "1");
+  const page = Number.isFinite(rawPage) ? Math.max(1, rawPage) : 1;
 
-  const minPrice = Number(params.minPrice ?? 0);
-  const maxPrice = Number(params.maxPrice ?? 0);
-
-  /*
-   * ---------------------------------------------------------
-   * FILTER
-   * ---------------------------------------------------------
-   */
-
-  let filteredProjects = projects.filter((project) => {
-    /* Keyword */
-    if (query) {
-      const searchableText = [
-        project.name,
-        project.tagline,
-        project.description,
-        project.location.area,
-        project.location.address,
-      ]
-        .join(" ")
-        .toLowerCase();
-
-      if (!searchableText.includes(query)) {
-        return false;
-      }
-    }
-
-    /* Area */
-    if (area) {
-      const projectArea =
-        project.location.area.toLowerCase();
-
-      if (!projectArea.includes(area)) {
-        return false;
-      }
-    }
-
-    /* Budget */
-    if (minPrice > 0) {
-      if (project.startingPrice < minPrice) {
-        return false;
-      }
-    }
-
-    if (maxPrice > 0) {
-      if (project.startingPrice > maxPrice) {
-        return false;
-      }
-    }
-
-    /* Bedrooms */
-    if (bedrooms > 0) {
-      const hasBedroomOption = project.unitTypes.some(
-        (unit) => unit.bedrooms >= bedrooms
-      );
-
-      if (!hasBedroomOption) {
-        return false;
-      }
-    }
-
-    return true;
-  });
-
-  /*
-   * ---------------------------------------------------------
-   * SORT
-   * ---------------------------------------------------------
-   */
-
-  const sort = params.sort ?? "newest";
-
-  filteredProjects = [...filteredProjects].sort(
-    (a, b) => {
-      switch (sort) {
-        case "price-asc":
-          return (
-            a.startingPrice -
-            b.startingPrice
-          );
-
-        case "price-desc":
-          return (
-            b.startingPrice -
-            a.startingPrice
-          );
-
-        case "progress":
-          return (
-            b.constructionProgress -
-            a.constructionProgress
-          );
-
-        case "newest":
-        default:
-          return (
-            Number(b.id.replace(/\D/g, "")) -
-            Number(a.id.replace(/\D/g, ""))
-          );
-      }
-    }
+  // Fetch, filter and sort
+  const allProjects = await projectService.list(
+    { query, area, minPrice, maxPrice, bedrooms },
+    sort
   );
 
-  const view = params.view ?? "grid";
+  // Paginate
+  const totalPages = Math.max(1, Math.ceil(allProjects.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const pageProjects = allProjects.slice(
+    (currentPage - 1) * PAGE_SIZE,
+    currentPage * PAGE_SIZE
+  );
+
+  function buildHref(targetPage: number) {
+    const search = new URLSearchParams();
+    for (const [key, value] of Object.entries(params)) {
+      if (typeof value === "string" && key !== "page") search.set(key, value);
+    }
+    if (targetPage > 1) search.set("page", String(targetPage));
+    const qs = search.toString();
+    return qs ? `/projects?${qs}` : "/projects";
+  }
 
   return (
     <>
@@ -152,95 +78,50 @@ export default async function ProjectsPage({
       <main className="min-h-screen bg-background">
         {/* Hero */}
         <section className="border-b border-border/60">
-          <div
-            className="
-              mx-auto max-w-[1600px]
-              px-6 pb-12 pt-12
-              sm:px-8
-              lg:px-12 lg:pb-14 lg:pt-16
-            "
-          >
-            <h1
-              className="
-                max-w-3xl
-                font-display text-4xl font-normal
-                leading-[0.95]
-                tracking-[-0.045em]
-                text-foreground
-                sm:text-5xl lg:text-6xl
-              "
-            >
-              New developer projects.
-            </h1>
+          <div className="mx-auto max-w-[1600px] px-6 pb-12 pt-12 sm:px-8 lg:px-12 lg:pb-14 lg:pt-16">
+            <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
+              <div className="max-w-3xl">
+                <h1 className="max-w-4xl font-display text-4xl font-normal leading-[0.95] tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
+                  New developer
+                  <br />
+                  <span className="text-foreground/80">projects.</span>
+                </h1>
 
-            <p
-              className="
-                mt-6 max-w-xl
-                text-sm leading-7
-                text-muted-foreground
-              "
-            >
-              Explore under-construction and ready
-              residential projects from trusted developers
-              across Dhaka, with unit availability, payment
-              plans and site visit booking.
-            </p>
+                <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground">
+                  Explore under-construction and ready residential projects
+                  from trusted developers across Dhaka, with unit
+                  availability, payment plans and site visit booking.
+                </p>
+              </div>
+
+              <div className="hidden shrink-0 text-right lg:block">
+                <p className="text-sm font-medium text-foreground">
+                  {allProjects.length}{" "}
+                  {allProjects.length === 1 ? "project" : "projects"}
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Listing */}
-        <section
-          className="
-            mx-auto max-w-[1600px]
-            px-6 py-10
-            sm:px-8
-            lg:px-12 lg:py-14
-          "
-        >
-          <div
-            className="
-              grid gap-10
-              lg:grid-cols-[280px_minmax(0,1fr)]
-              xl:grid-cols-[300px_minmax(0,1fr)]
-            "
-          >
-            {/* Sidebar */}
+        <section className="mx-auto max-w-[1600px] px-6 py-10 sm:px-8 lg:px-12 lg:py-14">
+          <div className="flex flex-col gap-10 lg:flex-row lg:gap-12">
             <ProjectFiltersSidebar />
 
-            {/* Results */}
-            <div className="min-w-0">
-              <ProjectToolbar
-                resultCount={filteredProjects.length}
-              />
+            <div className="min-w-0 flex-1">
+              <ProjectToolbar resultCount={allProjects.length} />
 
-              {filteredProjects.length === 0 ? (
-                <div className="py-20 text-center">
-                  <p className="text-sm text-muted-foreground">
-                    No projects found.
-                  </p>
-                </div>
-              ) : (
-                <div
-                  className={
-                    view === "list"
-                      ? "mt-8 flex flex-col gap-8"
-                      : `
-                        mt-8
-                        grid grid-cols-1
-                        gap-x-7 gap-y-14
-                        sm:grid-cols-2
-                        xl:grid-cols-3
-                        xl:gap-x-8
-                      `
-                  }
-                >
-                  {filteredProjects.map((project) => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                    />
-                  ))}
-                </div>
+              <div className="mt-8">
+                <ProjectGrid projects={pageProjects} view={view} />
+              </div>
+
+              {allProjects.length > 0 && (
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  buildHref={buildHref}
+                />
               )}
             </div>
           </div>

@@ -54,11 +54,12 @@ return (
 
       {/* Next */}
       <PageLink
+    
         href={buildHref(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
         aria-label="Next page"
       >
-        <span className="hidden text-[8px] uppercase tracking-[0.2em] sm:inline">
+        <span className="hidden text-[8px] uppercase tracking-[0.2em] sm:inline ">
           Next
         </span>
         <ChevronRight className="size-3.5" />

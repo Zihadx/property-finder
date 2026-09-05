@@ -17,12 +17,24 @@ import { Dialog } from "@/components/ui/dialog";
 import { useAppSelector } from "@/redux/hooks";
 
 const primaryLink = { href: "/properties", label: "Properties" };
+const projectLink = {
+  href: "/projects",
+  label: "Projects",
+};
 
 const discoverLinks = [
   { href: "/areas", label: "Areas", desc: "Browse listings by neighborhood" },
   { href: "/agents", label: "Agents", desc: "Meet verified local agents" },
-  { href: "/market-insights", label: "Market Insights", desc: "Prices, trends & data" },
-  { href: "/how-it-works", label: "How It Works", desc: "Search to move-in, explained" },
+  {
+    href: "/market-insights",
+    label: "Market Insights",
+    desc: "Prices, trends & data",
+  },
+  {
+    href: "/how-it-works",
+    label: "How It Works",
+    desc: "Search to move-in, explained",
+  },
 ];
 
 const menuLinks = [
@@ -145,6 +157,33 @@ export function SiteHeader() {
                 transition-all duration-500
                 group-hover:w-full
               "
+            />
+          </Link>
+          {/* Projects */}
+          <Link
+            href={projectLink.href}
+            className="
+    group relative py-2
+    text-[10px]
+    font-medium
+    uppercase
+    tracking-[0.2em]
+    text-muted-foreground
+    transition-colors duration-300
+    hover:text-foreground
+  "
+          >
+            {projectLink.label}
+
+            <span
+              className="
+      absolute bottom-0 left-1/2
+      h-px w-0
+      -translate-x-1/2
+      bg-foreground
+      transition-all duration-500
+      group-hover:w-full
+    "
             />
           </Link>
 

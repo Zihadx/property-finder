@@ -1,0 +1,181 @@
+"use client";
+
+import * as React from "react";
+import {
+  SlidersHorizontal,
+  LayoutGrid,
+  List,
+} from "lucide-react";
+
+import {
+  usePathname,
+  useRouter,
+  useSearchParams,
+} from "next/navigation";
+
+import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
+import { Sheet } from "@/components/ui/sheet";
+
+import { ProjectFiltersForm } from "./project-filters-form";
+import { cn } from "@/lib/utils";
+
+interface ProjectToolbarProps {
+  resultCount: number;
+}
+
+export function ProjectToolbar({
+  resultCount,
+}: ProjectToolbarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const [filtersOpen, setFiltersOpen] =
+    React.useState(false);
+
+  const sort =
+    searchParams.get("sort") ?? "newest";
+
+  const view =
+    searchParams.get("view") ?? "grid";
+
+  function updateParam(
+    key: string,
+    value: string
+  ) {
+    const params = new URLSearchParams(
+      searchParams.toString()
+    );
+
+    params.set(key, value);
+    params.delete("page");
+
+    router.push(
+      `${pathname}?${params.toString()}`
+    );
+  }
+
+  return (
+    <div className="border-b border-border/70 pb-5">
+      <div className="flex flex-wrap items-center justify-between gap-5">
+
+        {/* Results */}
+        <p className="text-sm text-foreground">
+          <span className="font-medium">
+            {resultCount}
+          </span>{" "}
+          <span className="text-muted-foreground">
+            {resultCount === 1
+              ? "project found"
+              : "projects found"}
+          </span>
+        </p>
+
+        {/* Controls */}
+        <div className="flex items-center gap-2 sm:gap-3">
+
+          {/* Mobile filters */}
+          <Button
+            variant="outline"
+            size="sm"
+            className="
+              h-10 rounded-none border-border
+              px-4 text-xs font-medium lg:hidden
+            "
+            onClick={() => setFiltersOpen(true)}
+          >
+            <SlidersHorizontal className="mr-2 size-3.5" />
+            Filters
+          </Button>
+
+          {/* Sort */}
+          <Select
+            value={sort}
+            onChange={(e) =>
+              updateParam("sort", e.target.value)
+            }
+            className="
+              h-10 w-40 rounded-none
+              border-border bg-transparent
+              text-sm text-foreground
+            "
+            aria-label="Sort projects"
+          >
+            <option value="newest">
+              Newest first
+            </option>
+
+            <option value="price-asc">
+              Price: Low to High
+            </option>
+
+            <option value="price-desc">
+              Price: High to Low
+            </option>
+
+            <option value="progress">
+              Construction progress
+            </option>
+          </Select>
+
+          {/* View switch */}
+          <div className="hidden h-10 items-center border border-border sm:flex">
+
+            <button
+              type="button"
+              aria-label="Grid view"
+              aria-pressed={view === "grid"}
+              onClick={() =>
+                updateParam("view", "grid")
+              }
+              className={cn(
+                "flex size-10 items-center justify-center transition-colors",
+                view === "grid"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <LayoutGrid
+                className="size-3.5"
+                strokeWidth={1.5}
+              />
+            </button>
+
+            <button
+              type="button"
+              aria-label="List view"
+              aria-pressed={view === "list"}
+              onClick={() =>
+                updateParam("view", "list")
+              }
+              className={cn(
+                "flex size-10 items-center justify-center border-l border-border transition-colors",
+                view === "list"
+                  ? "bg-foreground text-background"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              <List
+                className="size-3.5"
+                strokeWidth={1.5}
+              />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile filter sheet */}
+      <Sheet
+        open={filtersOpen}
+        onClose={() => setFiltersOpen(false)}
+        title="Filter projects"
+        side="bottom"
+      >
+        <ProjectFiltersForm
+          onApply={() => setFiltersOpen(false)}
+        />
+      </Sheet>
+    </div>
+  );
+}

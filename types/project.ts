@@ -31,7 +31,9 @@ export type AmenityIcon =
   | "gym"
   | "garden"
   | "security"
-  | "parking";
+  | "parking"
+  | "lounge"
+  | "play";
 
 export interface ProjectAmenity {
   label: string;
@@ -60,26 +62,33 @@ export interface Project {
   name: string;
   tagline: string;
   description: string;
+
   location: {
     area: string;
     address: string;
     lat: number;
     lng: number;
   };
+
   startingPrice: number;
   images: string[];
+
   towers: number;
   totalUnits: number;
   floors: number;
   bedroomRange: string;
   handoverLabel: string;
   salesPhone: string;
+
   unitTypes: ProjectUnitType[];
   availability: ProjectFloor[];
   floorPlans: FloorPlan[];
+
   amenities: ProjectAmenity[];
+
   constructionProgress: number;
   milestones: ConstructionMilestone[];
+
   paymentPlan: PaymentPlanStep[];
   faqs: ProjectFaq[];
 }

@@ -23,8 +23,16 @@ const projectLink = {
 };
 
 const discoverLinks = [
-  { href: "/areas", label: "Areas", desc: "Browse listings by neighborhood" },
-  { href: "/agents", label: "Agents", desc: "Meet verified local agents" },
+  {
+    href: "/areas",
+    label: "Areas",
+    desc: "Browse listings by neighborhood",
+  },
+  {
+    href: "/agents",
+    label: "Agents",
+    desc: "Meet verified local agents",
+  },
   {
     href: "/market-insights",
     label: "Market Insights",
@@ -34,6 +42,11 @@ const discoverLinks = [
     href: "/how-it-works",
     label: "How It Works",
     desc: "Search to move-in, explained",
+  },
+  {
+    href: "/contact",
+    label: "Contact",
+    desc: "Talk to our property team",
   },
 ];
 

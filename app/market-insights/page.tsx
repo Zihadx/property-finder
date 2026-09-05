@@ -1,291 +1,282 @@
-import { BarChart3, TrendingUp } from "lucide-react";
+import Link from "next/link";
+import { ArrowUpRight, Crown, Sparkles } from "lucide-react";
 
 import { areaService } from "@/services/area.service";
 import { propertyService } from "@/services/property.service";
+import type { Property, PropertyType } from "@/types/property";
 
 import { formatBDT } from "@/lib/utils";
-import { SectionHeading } from "@/components/marketing/section-heading";
 import { PropertyInsightsMotion } from "@/components/marketing/property-insights-motion";
+import { RevealHeading } from "@/components/marketing/reveal-heading";
 import { AreaPriceChart } from "@/components/marketing/area-price-chart";
 import { SiteFooter } from "@/components/layout/site-footer";
-import Image from "next/image";
+import { SiteHeader } from "@/components/layout/site-header";
 
 /**
- * Public market intelligence.
+ * Public market intelligence — restyled against the ListEasy editorial
+ * system (hairline rules, tracked caps micro-labels, serif figures) and
+ * consolidated into three sections: one composed snapshot (chart + price
+ * range + inventory, side by side rather than stacked), a showcase, and a
+ * single closing line.
  *
- * Keeps buyer-facing market context separate from internal agency analytics.
- * All values are derived from the existing property/area services.
+ * SiteHeader is rendered here on the same pattern as the existing
+ * SiteFooter call at the bottom. If your root layout.tsx already renders a
+ * global header, remove this import/usage — otherwise it'll render twice.
+ *
+ * The hero now reuses RevealHeading, the actual eyebrow/heading/side-note
+ * pattern from How It Works (cyan-700 dash, stone-950/500/400 text) — the
+ * Eyebrow() helper further down uses the same tokens for consistency.
+ *
+ * LUXURY_TYPES defines what counts as "the luxury segment" for the badge and
+ * share stat. Adjust if your business draws that line differently.
  */
+const LUXURY_TYPES: PropertyType[] = ["Luxury Apartment", "Penthouse", "Duplex"];
+
 export default async function Page() {
-  const areas = await areaService.list();
-  // ...rest unchanged
+  const [areas, priceRange, typeDistribution, showcase] = await Promise.all([
+    areaService.list(),
+    propertyService.getPriceRange(),
+    propertyService.getTypeDistribution(),
+    propertyService.list({ status: "Available", purpose: "Sale", featured: true }, "price-desc"),
+  ]);
 
-  const chartData = [...areas]
-    .sort((a, b) => b.averagePricePerSqft - a.averagePricePerSqft)
-    .slice(0, 6)
-    .map((area) => ({
-      area: area.name,
-      pricePerSqft: area.averagePricePerSqft,
-    }));
+  const topAreas = [...areas].sort((a, b) => b.averagePricePerSqft - a.averagePricePerSqft).slice(0, 6);
+  const chartData = topAreas.map((area) => ({ area: area.name, pricePerSqft: area.averagePricePerSqft }));
+  const primeAddress = topAreas[0];
 
-  const priceRange = await propertyService.getPriceRange();
-  const typeDistribution = await propertyService.getTypeDistribution();
+  const totalListings = typeDistribution.reduce((sum, item) => sum + item.count, 0);
+  const highestType = [...typeDistribution].sort((a, b) => b.count - a.count)[0];
 
-  const totalListings = typeDistribution.reduce(
-    (sum, item) => sum + item.count,
-    0,
-  );
+  const luxuryCount = typeDistribution
+    .filter((item) => LUXURY_TYPES.includes(item.type))
+    .reduce((sum, item) => sum + item.count, 0);
+  const luxuryShare = totalListings > 0 ? (luxuryCount / totalListings) * 100 : 0;
 
-  const highestType = [...typeDistribution].sort(
-    (a, b) => b.count - a.count,
-  )[0];
+  const featuredListings = showcase.slice(0, 3);
 
   return (
-    <section className="border-t border-border/60 bg-muted/20">
-      <div className="container mx-auto px-6 py-14 sm:py-16 lg:px-8 lg:py-20">
-        <div className="flex flex-col gap-10">
-          {/* Header */}
-          <SectionHeading
-            eyebrow="Market intelligence"
-            title="A clearer view of the market."
-            description="Current catalog data, presented to help you understand pricing and availability before you make a decision."
+    <>
+      <SiteHeader />
+
+      <section className="border-t border-border/60 bg-muted/20">
+        <div className="container mx-auto px-6 py-14 sm:py-16 lg:px-8 lg:py-20">
+          <RevealHeading
+            eyebrow="Private market intelligence"
+            titleLead="An insider's view"
+            titleMuted="of the luxury market."
+            note={{
+              lines: ["Every figure sourced", "from the live catalog."],
+              bullet: "Updated automatically",
+            }}
           />
+        </div>
 
-          {/* Main insight surface */}
-          <PropertyInsightsMotion>
-            <div className="overflow-hidden rounded-2xl border border-border/70 bg-background shadow-sm">
-              {/* Top utility bar */}
-              <div className="flex flex-col gap-4 border-b border-border/60 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-                <div className="flex items-center gap-3">
-                  <div className="flex size-9 items-center justify-center rounded-xl border border-border/70 bg-muted/40">
-                    <BarChart3 className="size-4" />
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-medium tracking-tight text-foreground">
-                      Current market snapshot
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      Based on active catalog listings
-                    </p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="size-1.5 rounded-full bg-emerald-500" />
-                  Live catalog data
-                </div>
+        <PropertyInsightsMotion>
+          {/* Snapshot — chart, price range, and inventory composed side by side */}
+          <div className="border-t border-border/60">
+            <div className="container mx-auto px-6 py-12 sm:py-14 lg:px-8 lg:py-16">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <Eyebrow>Market snapshot</Eyebrow>
+                <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                  {totalListings} active listings
+                  {highestType && <> &middot; {highestType.type} most common</>}
+                </span>
               </div>
 
-              {/* Content */}
-              <div className="grid lg:grid-cols-[1.35fr_0.65fr]">
-                {/* Price chart */}
-                <div className="min-w-0 border-b border-border/60 p-5 sm:p-6 lg:border-b-0 lg:border-r">
-                  <div className="flex items-start justify-between gap-4">
-                    <div>
-                      <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                        Price intelligence
-                      </p>
-
-                      <h3 className="mt-1.5 font-display text-xl tracking-tight text-foreground">
-                        Average price by area
-                      </h3>
-                    </div>
-
-                    <TrendingUp className="size-4 text-muted-foreground" />
-                  </div>
-
-                  <div className="mt-6 h-60">
+              <div className="mt-8 grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:gap-14">
+                {/* Left: chart */}
+                <div>
+                  <h3 className="font-display text-2xl tracking-tight text-foreground sm:text-3xl">
+                    Average price by area.
+                  </h3>
+                  {primeAddress && (
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      Prime address right now:{" "}
+                      <span className="font-medium text-foreground">{primeAddress.name}</span> at{" "}
+                      {formatBDT(primeAddress.averagePricePerSqft)}/sqft
+                    </p>
+                  )}
+                  <div className="mt-6 h-64">
                     <AreaPriceChart data={chartData} />
                   </div>
                 </div>
 
-                {/* Pricing */}
-                <div className="p-5 sm:p-6">
-                  <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                    Catalog range
-                  </p>
-
-                  <div className="mt-5 divide-y divide-border/60">
-                    <InsightMetric
-                      label="Lowest listed"
-                      value={formatBDT(priceRange.min)}
-                    />
-
-                    <InsightMetric
-                      label="Median asking price"
-                      value={formatBDT(priceRange.median)}
-                      emphasized
-                    />
-
-                    <InsightMetric
-                      label="Highest listed"
-                      value={formatBDT(priceRange.max)}
-                    />
+                {/* Right: price range + luxury share + inventory, one compact stack */}
+                <div className="flex flex-col divide-y divide-border/60">
+                  <div className="pb-6">
+                    <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                      Median asking price
+                    </p>
+                    <p className="mt-2 font-display text-3xl tracking-tight text-foreground sm:text-4xl">
+                      {formatBDT(priceRange.median)}
+                    </p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Range {formatBDT(priceRange.min)} – {formatBDT(priceRange.max)}
+                    </p>
                   </div>
 
-                  <div className="mt-7 rounded-xl border border-border/60 bg-muted/30 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <div>
-                        <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                          Catalog depth
-                        </p>
+                  <div className="flex items-center gap-1.5 py-4 text-xs font-medium text-muted-foreground">
+                    <Crown className="size-3.5" />
+                    {luxuryShare.toFixed(0)}% of catalog is luxury-tier
+                  </div>
 
-                        <p className="mt-1 text-2xl font-semibold tracking-tight text-foreground">
-                          {totalListings}
-                        </p>
-                      </div>
-
-                      {highestType && (
-                        <div className="text-right">
-                          <p className="text-[10px] uppercase tracking-[0.16em] text-muted-foreground">
-                            Most represented
-                          </p>
-
-                          <p className="mt-1 max-w-28 truncate text-sm font-medium text-foreground">
-                            {highestType.type}
-                          </p>
-                        </div>
-                      )}
+                  <div className="pt-4">
+                    <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                      Property types
+                    </p>
+                    <div className="mt-3 flex flex-col divide-y divide-border/60">
+                      {typeDistribution.map(({ type, count }) => {
+                        const percentage = totalListings > 0 ? (count / totalListings) * 100 : 0;
+                        return (
+                          <TypeRow
+                            key={type}
+                            type={type}
+                            count={count}
+                            percentage={percentage}
+                            isLuxury={LUXURY_TYPES.includes(type)}
+                          />
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
 
-              {/* Distribution */}
-              <div className="border-t border-border/60 px-5 py-5 sm:px-6 sm:py-6">
-                <div className="mb-5 flex items-end justify-between gap-4">
-                  <div>
-                    <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-                      Inventory mix
-                    </p>
+          {/* Showcase */}
+          {featuredListings.length > 0 && (
+            <div className="border-t border-border/60">
+              <div className="container mx-auto px-6 py-12 sm:py-14 lg:px-8 lg:py-16">
+                <Eyebrow>Handpicked</Eyebrow>
+                <h3 className="mt-3 font-display text-xl tracking-tight text-foreground sm:text-2xl">
+                  Currently showcasing
+                </h3>
 
-                    <h3 className="mt-1.5 text-base font-medium tracking-tight text-foreground">
-                      Property types
-                    </h3>
-                  </div>
-
-                  <span className="hidden text-xs text-muted-foreground sm:block">
-                    {totalListings} active listings
-                  </span>
-                </div>
-
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                  {typeDistribution.map(({ type, count }, index) => {
-                    const percentage =
-                      totalListings > 0 ? (count / totalListings) * 100 : 0;
-
-                    return (
-                      <PropertyTypeMetric
-                        key={type}
-                        type={type}
-                        count={count}
-                        percentage={percentage}
-                        index={index}
-                      />
-                    );
-                  })}
+                <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {featuredListings.map((property) => (
+                    <ShowcaseCard key={property.id} property={property} />
+                  ))}
                 </div>
               </div>
             </div>
-          </PropertyInsightsMotion>
-        </div>
-      </div>
+          )}
 
+          {/* Closing meta line */}
+          <div className="border-y border-border/60">
+            <div className="container mx-auto flex flex-col gap-4 px-6 py-5 sm:flex-row sm:items-center sm:justify-between lg:px-8">
+              <span className="text-[10px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
+                Beyond the numbers
+              </span>
+              <Link
+                href="/contact"
+                className="group flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.16em] text-foreground"
+              >
+                Request a private advisory call
+                <ArrowUpRight className="size-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </div>
+          </div>
+        </PropertyInsightsMotion>
 
-        <div>
-            <Image 
-            width={400}
-            height={400}
-            src="/images/homepage-convirt.png" 
-            alt="Market Insights" 
-            className="w-[650px] h-[500px] rounded-lg mx-auto my-8"
-            />
-        </div>
-  
-
-      <SiteFooter />
-    </section>
+        <SiteFooter />
+      </section>
+    </>
   );
 }
 
-function InsightMetric({
-  label,
-  value,
-  emphasized = false,
-}: {
-  label: string;
-  value: string;
-  emphasized?: boolean;
-}) {
+function Eyebrow({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-end justify-between gap-4 py-4 first:pt-0 last:pb-0">
-      <span className="text-xs text-muted-foreground">{label}</span>
-
-      <span
-        className={
-          emphasized
-            ? "text-lg font-semibold tracking-tight text-foreground"
-            : "text-sm font-medium tracking-tight text-foreground"
-        }
-      >
-        {value}
-      </span>
+    <div className="flex items-center gap-2">
+      <span className="h-px w-10 bg-cyan-700" />
+      <span className="text-[9px] font-medium uppercase tracking-[0.38em] text-stone-500">{children}</span>
     </div>
   );
 }
 
-function PropertyTypeMetric({
+function TypeRow({
   type,
   count,
   percentage,
-  index,
+  isLuxury,
 }: {
-  type: string;
+  type: PropertyType;
   count: number;
   percentage: number;
-  index: number;
+  isLuxury: boolean;
 }) {
   return (
-    <div className="group rounded-xl border border-border/60 bg-background/70 p-4 transition-all duration-300 hover:-translate-y-0.5 hover:border-border hover:shadow-sm">
-      <div className="flex items-center justify-between gap-3">
-        <span className="truncate text-xs font-medium text-foreground">
-          {type}
+    <div className="flex items-center justify-between gap-3 py-2.5">
+      <span className="flex items-center gap-1.5 truncate text-xs font-medium text-foreground">
+        {type}
+        {isLuxury && <Crown className="size-3 shrink-0 text-muted-foreground" />}
+      </span>
+      <div className="flex shrink-0 items-center gap-2">
+        <span className="h-1 w-14 overflow-hidden rounded-full bg-muted">
+          <span className="block h-full rounded-full bg-foreground" style={{ width: `${percentage}%` }} />
         </span>
-
-        <span className="text-xs tabular-nums text-muted-foreground">
-          {count}
-        </span>
+        <span className="w-6 text-right text-[11px] tabular-nums text-muted-foreground">{count}</span>
       </div>
-
-      <div className="mt-3 h-1 overflow-hidden rounded-full bg-muted">
-        <PropertyTypeBar percentage={percentage} index={index} />
-      </div>
-
-      <div className="mt-2 flex justify-between text-[10px] text-muted-foreground">
-        <span>Share</span>
-        <span>{percentage.toFixed(0)}%</span>
-      </div>
-
     </div>
-    
   );
 }
 
-async function PropertyTypeBar({
-  percentage,
-  index,
-}: {
-  percentage: number;
-  index: number;
-}) {
+function ShowcaseCard({ property }: { property: Property }) {
+  const cover = property.images?.[0];
+
   return (
-    <div
-      className="h-full origin-left rounded-full bg-foreground transition-[width] duration-700 ease-out"
-      style={{
-        width: `${percentage}%`,
-        animationDelay: `${index * 80}ms`,
-      }}
-    />
+    <div className="flex flex-col gap-5 rounded-xl border border-border/60 bg-background/70 p-5">
+      <div className="flex items-start justify-between gap-3">
+        <div className="flex min-w-0 items-center gap-3">
+          <div className="size-12 shrink-0 overflow-hidden rounded-lg bg-muted/40">
+            {cover ? (
+              // eslint-disable-next-line @next/next/no-img-element -- external/mock image paths, no domain config assumed
+              <img src={cover} alt={property.title} className="h-full w-full object-cover" loading="lazy" />
+            ) : (
+              <div className="flex h-full w-full items-center justify-center">
+                <Sparkles className="size-4 text-muted-foreground/40" />
+              </div>
+            )}
+          </div>
+          <div className="min-w-0">
+            <p className="truncate text-sm font-medium tracking-tight text-foreground">{property.title}</p>
+            <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">{property.type}</p>
+          </div>
+        </div>
+        <ArrowUpRight className="size-3.5 shrink-0 text-muted-foreground" />
+      </div>
+
+      <p className="text-xs text-muted-foreground">
+        {property.location.area} &middot; {property.location.address}
+      </p>
+
+      <div className="grid grid-cols-2 divide-x divide-border/60 rounded-lg border border-border/60 text-center">
+        <div className="px-3 py-2.5">
+          <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Price</p>
+          <p className="mt-0.5 text-sm font-semibold tracking-tight text-foreground">{formatBDT(property.price)}</p>
+        </div>
+        <div className="px-3 py-2.5">
+          <p className="text-[10px] uppercase tracking-[0.14em] text-muted-foreground">Size</p>
+          <p className="mt-0.5 text-sm font-semibold tracking-tight text-foreground">
+            {property.areaSqft.toLocaleString()} sqft
+          </p>
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        <Link
+          href={`/properties/${property.slug}`}
+          className="flex-1 rounded-full border border-border/70 py-2 text-center text-xs font-medium tracking-tight text-foreground transition-colors hover:border-border"
+        >
+          View details
+        </Link>
+        <Link
+          href="/contact"
+          className="flex-1 rounded-full bg-foreground py-2 text-center text-xs font-medium tracking-tight text-background"
+        >
+          Enquire
+        </Link>
+      </div>
+    </div>
   );
 }

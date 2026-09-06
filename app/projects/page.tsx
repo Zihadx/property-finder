@@ -9,6 +9,7 @@ import { ProjectToolbar } from "@/components/project/project-toolbar";
 import { ProjectGrid } from "@/components/project/project-grid";
 
 import { projectService, type ProjectSort } from "@/services/project.service";
+import { RevealHeading } from "@/components/marketing/reveal-heading";
 
 export const metadata: Metadata = {
   title: "New Developer Projects in Dhaka",
@@ -33,7 +34,9 @@ interface ProjectsPageProps {
   }>;
 }
 
-export default async function ProjectsPage({ searchParams }: ProjectsPageProps) {
+export default async function ProjectsPage({
+  searchParams,
+}: ProjectsPageProps) {
   const params = await searchParams;
 
   const query = params.q?.trim() || undefined;
@@ -50,7 +53,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   // Fetch, filter and sort
   const allProjects = await projectService.list(
     { query, area, minPrice, maxPrice, bedrooms },
-    sort
+    sort,
   );
 
   // Paginate
@@ -58,7 +61,7 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
   const currentPage = Math.min(page, totalPages);
   const pageProjects = allProjects.slice(
     (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
+    currentPage * PAGE_SIZE,
   );
 
   function buildHref(targetPage: number) {
@@ -81,16 +84,16 @@ export default async function ProjectsPage({ searchParams }: ProjectsPageProps) 
           <div className="mx-auto max-w-[1600px] px-6 pb-12 pt-12 sm:px-8 lg:px-12 lg:pb-14 lg:pt-16">
             <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
               <div className="max-w-3xl">
-                <h1 className="max-w-4xl font-display text-4xl font-normal leading-[0.95] tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
-                  New developer
-                  <br />
-                  <span className="text-foreground/80">projects.</span>
-                </h1>
+                <RevealHeading
+                  eyebrow="Developer Projects"
+                  titleLead="New developer"
+                  titleMuted="projects."
+                />
 
                 <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground">
-                  Explore under-construction and ready residential projects
-                  from trusted developers across Dhaka, with unit
-                  availability, payment plans and site visit booking.
+                  Explore under-construction and ready residential projects from
+                  trusted developers across Dhaka, with unit availability,
+                  payment plans and site visit booking.
                 </p>
               </div>
 

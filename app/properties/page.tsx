@@ -5,8 +5,12 @@ import { PropertyFiltersSidebar } from "@/components/property/property-filters-s
 import { PropertyToolbar } from "@/components/property/property-toolbar";
 import { PropertyGrid } from "@/components/property/property-grid";
 import { Pagination } from "@/components/ui/pagination";
-import { propertyService, type PropertySort } from "@/services/property.service";
+import {
+  propertyService,
+  type PropertySort,
+} from "@/services/property.service";
 import type { PropertyStatus, PropertyType } from "@/types/property";
+import { RevealHeading } from "@/components/marketing/reveal-heading";
 
 export const metadata: Metadata = {
   title: "Properties for Sale & Rent in Dhaka",
@@ -41,15 +45,25 @@ export default async function PropertiesPage({
   const page = Math.max(1, Number(get("page") ?? "1"));
 
   const allResults = await propertyService.list(
-    { area, type, status, purpose, featured, minPrice, maxPrice, bedrooms, query },
-    sort
+    {
+      area,
+      type,
+      status,
+      purpose,
+      featured,
+      minPrice,
+      maxPrice,
+      bedrooms,
+      query,
+    },
+    sort,
   );
 
   const totalPages = Math.max(1, Math.ceil(allResults.length / PAGE_SIZE));
   const currentPage = Math.min(page, totalPages);
   const pageResults = allResults.slice(
     (currentPage - 1) * PAGE_SIZE,
-    currentPage * PAGE_SIZE
+    currentPage * PAGE_SIZE,
   );
 
   function buildHref(targetPage: number) {
@@ -72,18 +86,16 @@ export default async function PropertiesPage({
           <div className="mx-auto max-w-[1600px] px-6 pb-14 pt-12 sm:px-8 lg:px-12 lg:pb-16 lg:pt-16">
             <div className="flex flex-col justify-between gap-10 lg:flex-row lg:items-end">
               <div className="max-w-3xl">
-                <h1 className="max-w-4xl font-display text-4xl font-normal leading-[0.95] tracking-[-0.045em] text-foreground sm:text-5xl lg:text-6xl xl:text-7xl">
-                  Exceptional places.
-                  <br />
-                  <span className="text-foreground/80">
-                    Considered carefully.
-                  </span>
-                </h1>
+              
+                <RevealHeading
+                  eyebrow="Explore our properties"
+                  titleLead="Exceptional places."
+                  titleMuted="Considered carefully."
+                />
 
                 <p className="mt-6 max-w-xl text-sm leading-7 text-muted-foreground">
-                  Explore a curated selection of residences, land and
-                  commercial properties across Dhaka&apos;s most
-                  distinguished addresses.
+                  Explore a curated selection of residences, land and commercial
+                  properties across Dhaka&apos;s most distinguished addresses.
                 </p>
               </div>
 

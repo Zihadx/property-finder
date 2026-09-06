@@ -1,16 +1,10 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
-import {
-  ArrowUpRight,
-  Mail,
-  MapPin,
-  Phone,
-  Clock3,
-  Check,
-} from "lucide-react";
+import { ArrowUpRight, Mail, MapPin, Phone, Clock3, Check } from "lucide-react";
 
 import { SiteHeader } from "@/components/layout/site-header";
+import { RevealHeading } from "@/components/marketing/reveal-heading";
 
 const reveal = {
   hidden: {
@@ -65,22 +59,7 @@ const ContactPage = () => {
       <SiteHeader />
 
       <main className="relative overflow-hidden bg-[#f6f5f1] text-stone-950">
-        {/* ───────────────── Atmospheric Light ───────────────── */}
 
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-40 top-40 h-[34rem] w-[34rem] rounded-full bg-cyan-700/[0.045] blur-[120px]"
-        />
-
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-[12%] top-0 h-72 w-72 rounded-full bg-white/80 blur-[100px]"
-        />
-
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute bottom-[10%] right-[15%] h-64 w-64 rounded-full bg-cyan-700/[0.025] blur-[100px]"
-        />
 
         {/* ───────────────── Hero ───────────────── */}
 
@@ -95,22 +74,12 @@ const ContactPage = () => {
               {/* Eyebrow */}
 
               <div className="mb-8 flex items-center gap-4">
-                
-
-                <span className="h-px w-10 bg-stone-300" />
-
-                <span className="text-[10px] font-bold uppercase tracking-[0.28em] text-cyan-700">
-                  Contact ListEasy
-                </span>
+                <RevealHeading
+                  eyebrow="Contact ListEasy"
+                  titleLead="Let's find"
+                  titleMuted="your place."
+                />
               </div>
-
-              {/* Heading */}
-
-              <h1 className="font-display text-[clamp(3.75rem,8vw,8rem)] font-medium leading-[0.88] tracking-[-0.06em] text-stone-950">
-                Let&apos;s find
-                <br />
-                <span className="text-stone-500">your place.</span>
-              </h1>
 
               {/* Intro */}
 
@@ -224,8 +193,7 @@ const ContactPage = () => {
                 </div>
 
                 <p className="max-w-xs text-[11px] font-medium leading-5 text-stone-600">
-                  Your enquiry stays private. No unnecessary calls, no
-                  pressure.
+                  Your enquiry stays private. No unnecessary calls, no pressure.
                 </p>
               </div>
             </motion.div>
@@ -265,11 +233,7 @@ const ContactPage = () => {
                 {/* Name + Email */}
 
                 <div className="grid gap-8 sm:grid-cols-2">
-                  <Field
-                    label="Your name"
-                    placeholder="Full name"
-                    required
-                  />
+                  <Field label="Your name" placeholder="Full name" required />
 
                   <Field
                     label="Email address"
@@ -315,10 +279,7 @@ const ContactPage = () => {
                     placeholder="e.g. Gulshan"
                   />
 
-                  <Field
-                    label="Budget"
-                    placeholder="Your preferred range"
-                  />
+                  <Field label="Budget" placeholder="Your preferred range" />
                 </div>
 
                 {/* Message */}
@@ -344,8 +305,8 @@ const ContactPage = () => {
 
                 <div className="flex flex-col gap-6 border-t border-stone-300/90 pt-8 sm:flex-row sm:items-center sm:justify-between">
                   <p className="max-w-xs text-[11px] font-normal leading-5 text-stone-500">
-                    Your information is kept private and used only to respond
-                    to your enquiry.
+                    Your information is kept private and used only to respond to
+                    your enquiry.
                   </p>
 
                   <button
@@ -423,9 +384,7 @@ function Field({
       <label className="text-[10px] font-bold uppercase tracking-[0.22em] text-stone-600">
         {label}
 
-        {required && (
-          <span className="ml-1 text-cyan-700">*</span>
-        )}
+        {required && <span className="ml-1 text-cyan-700">*</span>}
       </label>
 
       <input

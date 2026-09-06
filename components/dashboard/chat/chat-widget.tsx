@@ -12,11 +12,12 @@ import {
   findReply,
 } from "@/data/chat";
 import Image from "next/image";
+import Link from "next/link";
 
 interface ChatMessage {
   id: string;
   role: "bot" | "user";
-  text: string;
+  text: React.ReactNode;
 }
 
 // Kept outside the component: the React Compiler flags any Math.random()/
@@ -24,7 +25,7 @@ interface ChatMessage {
 // only ever run inside a setTimeout after a user action. Module-level plain
 // functions aren't subject to that purity check.
 let messageSeq = 0;
-function createMessage(role: ChatMessage["role"], text: string): ChatMessage {
+function createMessage(role: ChatMessage["role"], text: React.ReactNode): ChatMessage {
   messageSeq += 1;
   return { id: `${role}-${messageSeq}`, role, text };
 }
@@ -47,10 +48,13 @@ export function ChatWidget() {
   const listRef = React.useRef<HTMLDivElement>(null);
 
   React.useEffect(() => {
-    listRef.current?.scrollTo({ top: listRef.current.scrollHeight, behavior: "smooth" });
+    listRef.current?.scrollTo({
+      top: listRef.current.scrollHeight,
+      behavior: "smooth",
+    });
   }, [messages, typing, open]);
 
-  function pushMessage(role: ChatMessage["role"], text: string) {
+  function pushMessage(role: ChatMessage["role"], text: React.ReactNode) {
     setMessages((prev) => [...prev, createMessage(role, text)]);
   }
 
@@ -78,7 +82,19 @@ export function ChatWidget() {
       setTyping(true);
       setTimeout(() => {
         setTyping(false);
-        pushMessage("bot", "Here you go: https://listeasybd.vercel.app/properties has all current listings.");
+        pushMessage(
+          "bot",
+          <>
+            Here you go:{" "}
+            <Link
+              href="/properties"
+              className="font-medium underline underline-offset-2 transition-opacity hover:opacity-70"
+            >
+              View Properties
+            </Link>{" "}
+            — or tap the WhatsApp button below to chat with an advisor.
+          </>,
+        );
       }, 500);
       return;
     }
@@ -86,7 +102,10 @@ export function ChatWidget() {
       setTyping(true);
       setTimeout(() => {
         setTyping(false);
-        pushMessage("bot", "Tap the WhatsApp button below and an advisor will pick it up right away.");
+        pushMessage(
+          "bot",
+          "Tap the WhatsApp button below and an advisor will pick it up right away.",
+        );
       }, 500);
       return;
     }
@@ -109,7 +128,6 @@ export function ChatWidget() {
               <div className="flex items-center gap-3">
                 <span className="flex size-9 items-center justify-center rounded-full bg-background/15">
                   <Bot className="size-4.5" />
-                 
                 </span>
                 <div>
                   <p className="text-sm font-medium">ListEasy Assistant</p>
@@ -142,7 +160,7 @@ export function ChatWidget() {
                   transition={{ duration: 0.25, ease: "easeOut" }}
                   className={cn(
                     "flex items-end gap-2",
-                    message.role === "user" && "flex-row-reverse"
+                    message.role === "user" && "flex-row-reverse",
                   )}
                 >
                   {message.role === "bot" && (
@@ -155,7 +173,7 @@ export function ChatWidget() {
                       "max-w-[78%] px-3.5 py-2.5 text-sm leading-5 shadow-sm",
                       message.role === "bot"
                         ? "rounded-2xl rounded-bl-sm border border-border/50 bg-background/90 text-foreground backdrop-blur"
-                        : "rounded-2xl rounded-br-sm bg-foreground text-background"
+                        : "rounded-2xl rounded-br-sm bg-foreground text-background",
                     )}
                   >
                     {message.text}
@@ -241,50 +259,50 @@ export function ChatWidget() {
           </motion.div>
         )}
       </AnimatePresence>
-<motion.button
-  type="button"
-  onClick={() => setOpen((v) => !v)}
-  aria-label={open ? "Close chat" : "Open chat"}
-  whileHover={{ scale: 1.06 }}
-  whileTap={{ scale: 0.95 }}
-  className="relative flex size-14 items-center justify-center rounded-full bg-gray-500 text-background shadow-lg"
->
-  {!open && (
-    <motion.span
-      className="absolute inset-0 rounded-full bg-foreground/40"
-      animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-      transition={{
-        duration: 2.4,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-  )}
+      <motion.button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-label={open ? "Close chat" : "Open chat"}
+        whileHover={{ scale: 1.06 }}
+        whileTap={{ scale: 0.95 }}
+        className="relative flex size-14 items-center justify-center rounded-full bg-[#9fc5e9]/20 text-background backdrop-blur-3xl"
+      >
+        {!open && (
+          <motion.span
+            className="absolute inset-0 rounded-full bg-[#9fc5e9]/50"
+            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+            transition={{
+              duration: 2.4,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        )}
 
-  <AnimatePresence mode="wait" initial={false}>
-    <motion.span
-      key={open ? "close" : "open"}
-      initial={{ rotate: -90, opacity: 0 }}
-      animate={{ rotate: 0, opacity: 1 }}
-      exit={{ rotate: 90, opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className="relative flex items-center justify-center"
-    >
-      {open ? (
-        <X className="size-5" />
-      ) : (
-        <Image
-          src="/images/chat.png"
-          alt="Open chat"
-          width={40}
-          height={40}
-          className="object-contain"
-          priority
-        />
-      )}
-    </motion.span>
-  </AnimatePresence>
-</motion.button>
+        <AnimatePresence mode="wait" initial={false}>
+          <motion.span
+            key={open ? "close" : "open"}
+            initial={{ rotate: -90, opacity: 0 }}
+            animate={{ rotate: 0, opacity: 1 }}
+            exit={{ rotate: 90, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="relative flex items-center justify-center"
+          >
+            {open ? (
+              <X className="size-5" />
+            ) : (
+              <Image
+                src="/images/chat-icon.png"
+                alt="Open chat"
+                width={40}
+                height={40}
+                className="object-contain"
+                priority
+              />
+            )}
+          </motion.span>
+        </AnimatePresence>
+      </motion.button>
     </div>
   );
 }

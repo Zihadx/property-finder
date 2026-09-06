@@ -11,6 +11,7 @@ import {
   FALLBACK_REPLY,
   findReply,
 } from "@/data/chat";
+import Image from "next/image";
 
 interface ChatMessage {
   id: string;
@@ -77,15 +78,7 @@ export function ChatWidget() {
       setTyping(true);
       setTimeout(() => {
         setTyping(false);
-        pushMessage("bot", "Here you go: /properties has all current listings.");
-      }, 500);
-      return;
-    }
-    if (label === "Browse projects") {
-      setTyping(true);
-      setTimeout(() => {
-        setTyping(false);
-        pushMessage("bot", "Here you go: /projects has our developer projects.");
+        pushMessage("bot", "Here you go: https://listeasybd.vercel.app/properties has all current listings.");
       }, 500);
       return;
     }
@@ -101,7 +94,7 @@ export function ChatWidget() {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6">
+    <div className="fixed bottom-20 md:bottom-4 right-4 z-50 sm:bottom-6 sm:right-6">
       <AnimatePresence>
         {open && (
           <motion.div
@@ -116,6 +109,7 @@ export function ChatWidget() {
               <div className="flex items-center gap-3">
                 <span className="flex size-9 items-center justify-center rounded-full bg-background/15">
                   <Bot className="size-4.5" />
+                 
                 </span>
                 <div>
                   <p className="text-sm font-medium">ListEasy Assistant</p>
@@ -247,35 +241,50 @@ export function ChatWidget() {
           </motion.div>
         )}
       </AnimatePresence>
+<motion.button
+  type="button"
+  onClick={() => setOpen((v) => !v)}
+  aria-label={open ? "Close chat" : "Open chat"}
+  whileHover={{ scale: 1.06 }}
+  whileTap={{ scale: 0.95 }}
+  className="relative flex size-14 items-center justify-center rounded-full bg-gray-500 text-background shadow-lg"
+>
+  {!open && (
+    <motion.span
+      className="absolute inset-0 rounded-full bg-foreground/40"
+      animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
+      transition={{
+        duration: 2.4,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    />
+  )}
 
-      <motion.button
-        type="button"
-        onClick={() => setOpen((v) => !v)}
-        aria-label={open ? "Close chat" : "Open chat"}
-        whileHover={{ scale: 1.06 }}
-        whileTap={{ scale: 0.95 }}
-        className="relative flex size-14 items-center justify-center rounded-full bg-foreground text-background shadow-lg"
-      >
-        {!open && (
-          <motion.span
-            className="absolute inset-0 rounded-full bg-foreground/40"
-            animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-            transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
-          />
-        )}
-        <AnimatePresence mode="wait" initial={false}>
-          <motion.span
-            key={open ? "close" : "open"}
-            initial={{ rotate: -90, opacity: 0 }}
-            animate={{ rotate: 0, opacity: 1 }}
-            exit={{ rotate: 90, opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="relative flex items-center justify-center"
-          >
-            {open ? <X className="size-5" /> : <MessageCircle className="size-5" />}
-          </motion.span>
-        </AnimatePresence>
-      </motion.button>
+  <AnimatePresence mode="wait" initial={false}>
+    <motion.span
+      key={open ? "close" : "open"}
+      initial={{ rotate: -90, opacity: 0 }}
+      animate={{ rotate: 0, opacity: 1 }}
+      exit={{ rotate: 90, opacity: 0 }}
+      transition={{ duration: 0.2 }}
+      className="relative flex items-center justify-center"
+    >
+      {open ? (
+        <X className="size-5" />
+      ) : (
+        <Image
+          src="/images/chat.png"
+          alt="Open chat"
+          width={40}
+          height={40}
+          className="object-contain"
+          priority
+        />
+      )}
+    </motion.span>
+  </AnimatePresence>
+</motion.button>
     </div>
   );
 }

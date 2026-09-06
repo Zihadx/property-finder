@@ -12,7 +12,7 @@ export default function DashboardLayout({
     <div className="min-h-screen bg-background text-foreground">
       <DashboardSidebar />
 
-      <div className="min-w-0 lg:pl-62">
+      <div className="min-w-0 transition-[padding] duration-300 lg:pl-(--sidebar-w,280px)">
         <DashboardTopbar />
 
         <main className="min-h-[calc(100vh-64px)] px-5 py-7 sm:px-7 lg:px-10 lg:py-9">

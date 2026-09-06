@@ -24,7 +24,6 @@ export const SALES_EMAIL =
 
 export const QUICK_REPLIES = [
   "Browse properties",
-  "Browse projects",
   "Find a property for me",
   "Book a site visit",
   "Talk to a human",

@@ -20,6 +20,7 @@ import { propertyStatusVariant } from "@/components/property/property-status";
 
 import { propertyService } from "@/services/property.service";
 import { agentService } from "@/services/agent.service";
+import { EmiCalculator } from "@/components/property/emi-calculator";
 
 export async function generateMetadata({
   params,
@@ -221,6 +222,17 @@ export default async function PropertyDetailPage({
               </h2>
               <PropertyAmenities amenities={property.amenities} />
             </section>
+            {agent && (
+              <section className="border-t border-border/50 py-10">
+                <h2 className="mb-7 font-display text-lg tracking-[-0.02em] text-foreground">
+                  Estimate your payments
+                </h2>
+                <EmiCalculator
+                  defaultPrice={property.price}
+                  salesPhone={agent.phone}
+                />
+              </section>
+            )}
 
             <section className="border-t border-border/50 py-10">
               <h2 className="mb-7 font-display text-lg tracking-[-0.02em] text-foreground">
@@ -240,25 +252,9 @@ export default async function PropertyDetailPage({
               {agent && (
                 <div className="overflow-hidden border border-border/70 bg-card">
                   <div className="flex items-center gap-4 p-5">
-                    <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-full border border-border">
-                      <Image
-                        src={agent.photo}
-                        alt={agent.name}
-                        fill
-                        sizes="56px"
-                        className="object-cover"
-                      />
-                    </div>
-
                     <div className="min-w-0">
-                      <p className="text-[11px] text-muted-foreground">
-                        Listed by
-                      </p>
-                      <h3 className="truncate font-display text-lg text-foreground">
-                        {agent.name}
-                      </h3>
-                      <p className="mt-0.5 text-[12px] text-muted-foreground">
-                        {agent.position}
+                      <p className="text-xl text-muted-foreground">
+                        Listed by:
                       </p>
                     </div>
                   </div>

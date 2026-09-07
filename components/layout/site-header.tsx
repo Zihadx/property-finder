@@ -8,8 +8,12 @@ import {
   ChevronDown,
   Heart,
   LayoutDashboard,
+  LogOut,
   Menu,
+  MessageSquare,
   Scale,
+  Settings,
+  User,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +24,14 @@ import { useAppSelector } from "@/redux/hooks";
    DATA
 ===================================================================== */
 
-type NavLinkItem = { href: string; label: string };
+type NavLinkItem = {
+  href: string;
+  label: string;
+  /** Small tag shown next to the label, e.g. "Preview". */
+  badge?: string;
+  /** One-line explanation shown under the label (mobile menu + dropdowns). */
+  note?: string;
+};
 type DiscoverLinkItem = NavLinkItem & { desc: string };
 
 const primaryLink: NavLinkItem = { href: "/properties", label: "Properties" };
@@ -34,6 +45,17 @@ const discoverLinks: DiscoverLinkItem[] = [
   { href: "/contact", label: "Contact", desc: "Talk to our property team" },
 ];
 
+// Agency Dashboard is normally a private, role-gated route. It's included
+// here — with a visible "Preview" badge and explanation — because it's
+// temporarily open to the public for evaluation. Remove the badge/note
+// once the route goes back to being agency-only.
+const dashboardLink: NavLinkItem = {
+  href: "/dashboard",
+  label: "Agency Dashboard",
+  badge: "Preview",
+  note: "Normally reserved for verified agencies — open for a public overview while we're in beta.",
+};
+
 // Every link that should be reachable from the mobile menu. `projectLink`
 // was previously rendered in the desktop nav only and had no mobile
 // equivalent — added here so mobile users can actually reach /projects.
@@ -44,8 +66,72 @@ const menuLinks: NavLinkItem[] = [
   { href: "/compare", label: "Compare" },
   { href: "/customer/saved", label: "Saved Properties" },
   { href: "/list-your-property", label: "List Your Property" },
-  { href: "/dashboard", label: "Agency Dashboard" },
+  dashboardLink,
 ];
+
+/* =====================================================================
+   AUTH — this file assumes an `auth` slice shaped like
+   `{ user: CurrentUser | null }`. Point the selector below at whatever
+   your store actually uses; everything else works off `user` being
+   present or null.
+===================================================================== */
+
+type CurrentUser = {
+  name: string;
+  email: string;
+  avatarUrl?: string;
+  role: "customer" | "agent";
+};
+
+function useCurrentUser(): CurrentUser | null {
+  // TODO: no `auth` slice exists on RootState yet (it currently only has
+  // favorites/compare/filters). Once you add one, swap this for:
+  //   return useAppSelector((state) => state.auth.user);
+  // Returning null keeps the header in its signed-out (Log In / Sign Up) state.
+  return null;
+}
+
+function getInitials(name: string) {
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
+
+function Avatar({
+  name,
+  avatarUrl,
+  size = 34,
+}: {
+  name: string;
+  avatarUrl?: string;
+  size?: number;
+}) {
+  if (avatarUrl) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={avatarUrl}
+        alt={name}
+        className="shrink-0 rounded-full object-cover ring-1 ring-border/70"
+        style={{ width: size, height: size }}
+      />
+    );
+  }
+  return (
+    <div
+      className="flex shrink-0 items-center justify-center rounded-full bg-foreground ring-1 ring-border/70"
+      style={{ width: size, height: size }}
+    >
+      <span className="text-[11px] font-semibold tracking-wide text-background">
+        {getInitials(name)}
+      </span>
+    </div>
+  );
+}
 
 /* =====================================================================
    NAV LINK — animated-underline link, shared by Properties & Projects
@@ -127,7 +213,7 @@ function CountIconLink({
    hover-intent timers, outside-click and Escape handling)
 ===================================================================== */
 
-function DiscoverMenu() {
+function useDropdown() {
   const [open, setOpen] = React.useState(false);
   const rootRef = React.useRef<HTMLDivElement>(null);
   const closeTimer = React.useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -149,8 +235,6 @@ function DiscoverMenu() {
     };
   }, []);
 
-  // Clear any pending close timer on unmount to avoid a stray setState
-  // firing after the component is gone.
   React.useEffect(() => {
     return () => {
       if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -165,6 +249,12 @@ function DiscoverMenu() {
   const closeWithIntent = React.useCallback(() => {
     closeTimer.current = setTimeout(() => setOpen(false), 120);
   }, []);
+
+  return { open, setOpen, rootRef, openWithIntent, closeWithIntent };
+}
+
+function DiscoverMenu() {
+  const { open, setOpen, rootRef, openWithIntent, closeWithIntent } = useDropdown();
 
   return (
     <div
@@ -250,19 +340,186 @@ function DiscoverMenu() {
 }
 
 /* =====================================================================
+   ACCOUNT MENU — a single trigger for both signed-in and signed-out
+   states. Signed out: Sign In / Sign Up. Signed in: account links +
+   Log Out. The Agency Dashboard entry (with its preview badge/note)
+   always appears, since the route itself is open to everyone right now.
+===================================================================== */
+
+function AccountMenuLink({
+  href,
+  icon: Icon,
+  label,
+  onSelect,
+}: {
+  href: string;
+  icon: LucideIcon;
+  label: string;
+  onSelect: () => void;
+}) {
+  return (
+    <Link
+      href={href}
+      role="menuitem"
+      onClick={onSelect}
+      className="flex items-center gap-3 px-5 py-2.5 transition-colors duration-200 hover:bg-foreground/[0.04]"
+    >
+      <Icon className="h-4 w-4 text-muted-foreground" />
+      <span className="text-[13px] font-medium text-foreground">{label}</span>
+    </Link>
+  );
+}
+
+function AccountMenu({ user, onLogOut }: { user: CurrentUser | null; onLogOut: () => void }) {
+  const { open, setOpen, rootRef, openWithIntent, closeWithIntent } = useDropdown();
+  const close = React.useCallback(() => setOpen(false), [setOpen]);
+
+  return (
+    <div
+      ref={rootRef}
+      className="relative"
+      onMouseEnter={openWithIntent}
+      onMouseLeave={closeWithIntent}
+    >
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        aria-haspopup="menu"
+        aria-controls="account-menu-panel"
+        aria-label="Account menu"
+        className="
+          group flex items-center gap-2 rounded-full py-1 pl-1 pr-2.5
+          transition-colors duration-300
+          hover:bg-foreground/[0.06]
+        "
+      >
+        {user ? (
+          <Avatar name={user.name} avatarUrl={user.avatarUrl} />
+        ) : (
+          <span className="flex h-[34px] w-[34px] items-center justify-center rounded-full border border-border/70 text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
+            <User className="h-4 w-4" />
+          </span>
+        )}
+        <ChevronDown
+          className={`h-3 w-3 text-muted-foreground transition-transform duration-300 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      <div
+        id="account-menu-panel"
+        role="menu"
+        aria-hidden={!open}
+        className={`
+          absolute right-0 top-full mt-3 w-80 origin-top-right
+          border border-border/70 bg-background/95
+          shadow-xl backdrop-blur-xl
+          transition-all duration-200 ease-out
+          ${open ? "pointer-events-auto translate-y-0 opacity-100" : "pointer-events-none -translate-y-1 opacity-0"}
+        `}
+      >
+        {user ? (
+          <>
+            <div className="flex items-center gap-3 border-b border-border/70 px-5 py-4">
+              <Avatar name={user.name} avatarUrl={user.avatarUrl} size={42} />
+              <div className="min-w-0">
+                <div className="truncate text-[13px] font-medium text-foreground">{user.name}</div>
+                <div className="truncate text-[11px] text-muted-foreground">{user.email}</div>
+              </div>
+            </div>
+
+            <div className="py-2">
+              <AccountMenuLink href="/account" icon={User} label="Account" onSelect={close} />
+              <AccountMenuLink href="/account/settings" icon={Settings} label="Settings" onSelect={close} />
+              <AccountMenuLink href="/customer/saved" icon={Heart} label="Saved Properties" onSelect={close} />
+              <AccountMenuLink href="/customer/inquiries" icon={MessageSquare} label="My Inquiries" onSelect={close} />
+            </div>
+          </>
+        ) : (
+          <div className="flex flex-col gap-2 border-b border-border/70 px-5 py-4">
+            <Link
+              href="/login"
+              role="menuitem"
+              onClick={close}
+              className="flex h-10 items-center justify-center border border-border text-[10px] font-medium uppercase tracking-[0.16em] text-foreground transition-colors duration-300 hover:bg-foreground/[0.04]"
+            >
+              Sign In
+            </Link>
+            <Link
+              href="/signup"
+              role="menuitem"
+              onClick={close}
+              className="flex h-10 items-center justify-center bg-foreground text-[10px] font-semibold uppercase tracking-[0.16em] text-background transition-opacity hover:opacity-90"
+            >
+              Sign Up
+            </Link>
+          </div>
+        )}
+
+        <div className="border-t border-border/70 py-2">
+          <Link
+            href={dashboardLink.href}
+            role="menuitem"
+            onClick={close}
+            className="group/item flex items-start gap-3 px-5 py-3 transition-colors duration-200 hover:bg-foreground/[0.04]"
+          >
+            <LayoutDashboard className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+            <div className="min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[13px] font-medium text-foreground">{dashboardLink.label}</span>
+                {dashboardLink.badge && (
+                  <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-accent-strong">
+                    {dashboardLink.badge}
+                  </span>
+                )}
+              </div>
+              {dashboardLink.note && (
+                <p className="mt-0.5 text-[10.5px] leading-relaxed text-muted-foreground">
+                  {dashboardLink.note}
+                </p>
+              )}
+            </div>
+          </Link>
+        </div>
+
+        {user && (
+          <div className="border-t border-border/70 py-2">
+            <button
+              type="button"
+              onClick={() => {
+                close();
+                onLogOut();
+              }}
+              className="flex w-full items-center gap-3 px-5 py-3 text-left transition-colors duration-200 hover:bg-foreground/[0.04]"
+            >
+              <LogOut className="h-4 w-4 text-muted-foreground" />
+              <span className="text-[13px] font-medium text-foreground">Log Out</span>
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================================
    MOBILE MENU — dialog content, isolated so SiteHeader stays readable
 ===================================================================== */
 
 function MobileMenu({
   open,
   onClose,
+  user,
   savedCount,
   compareCount,
+  onLogOut,
 }: {
   open: boolean;
   onClose: () => void;
+  user: CurrentUser | null;
   savedCount: number;
   compareCount: number;
+  onLogOut: () => void;
 }) {
   const countFor = (href: string) =>
     href === "/customer/saved" ? savedCount : href === "/compare" ? compareCount : 0;
@@ -270,6 +527,44 @@ function MobileMenu({
   return (
     <Dialog open={open} onClose={onClose}>
       <div className="overflow-hidden">
+        {user ? (
+          <div className="flex items-center gap-3 border-b border-border px-5 py-4">
+            <Avatar name={user.name} avatarUrl={user.avatarUrl} size={42} />
+            <div className="min-w-0">
+              <div className="truncate text-[13px] font-medium text-foreground">{user.name}</div>
+              <div className="truncate text-[11px] text-muted-foreground">{user.email}</div>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onLogOut();
+              }}
+              className="ml-auto flex items-center gap-1.5 py-1 text-[10px] font-medium uppercase tracking-[0.14em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              Log Out
+            </button>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 border-b border-border px-5 py-4">
+            <Link
+              href="/login"
+              onClick={onClose}
+              className="flex-1 border border-border py-2.5 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-foreground transition-colors duration-300 hover:bg-surface-muted"
+            >
+              Log In
+            </Link>
+            <Link
+              href="/signup"
+              onClick={onClose}
+              className="flex-1 bg-foreground py-2.5 text-center text-[10px] font-semibold uppercase tracking-[0.16em] text-background transition-opacity hover:opacity-90"
+            >
+              Sign Up
+            </Link>
+          </div>
+        )}
+
         <nav className="p-3">
           {menuLinks.map((link, index) => {
             const count = countFor(link.href);
@@ -279,7 +574,7 @@ function MobileMenu({
                 href={link.href}
                 onClick={onClose}
                 className="
-                  group flex items-center justify-between
+                  group flex items-center justify-between gap-3
                   border-b border-border/50 px-4 py-4
                   transition-colors duration-300
                   last:border-b-0
@@ -290,23 +585,37 @@ function MobileMenu({
                   <span className="text-[9px] font-medium tracking-[0.15em] text-muted-foreground/60">
                     0{index + 1}
                   </span>
-                  <span className="text-sm font-medium text-foreground">{link.label}</span>
-                  {count > 0 && (
-                    <span
-                      className="
-                        flex h-5 min-w-5 items-center justify-center
-                        rounded-full bg-accent px-1.5
-                        text-[9px] font-semibold text-accent-foreground
-                      "
-                    >
-                      {count}
-                    </span>
-                  )}
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium text-foreground">{link.label}</span>
+                      {link.badge && (
+                        <span className="rounded-full bg-accent/15 px-2 py-0.5 text-[8px] font-semibold uppercase tracking-[0.12em] text-accent-strong">
+                          {link.badge}
+                        </span>
+                      )}
+                      {count > 0 && (
+                        <span
+                          className="
+                            flex h-5 min-w-5 items-center justify-center
+                            rounded-full bg-accent px-1.5
+                            text-[9px] font-semibold text-accent-foreground
+                          "
+                        >
+                          {count}
+                        </span>
+                      )}
+                    </div>
+                    {link.note && (
+                      <p className="mt-1 max-w-[220px] text-[10.5px] leading-relaxed text-muted-foreground">
+                        {link.note}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <ArrowUpRight
                   className="
-                    h-4 w-4 text-muted-foreground opacity-0
+                    h-4 w-4 shrink-0 text-muted-foreground opacity-0
                     transition-all duration-300
                     group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:opacity-100
                   "
@@ -353,9 +662,14 @@ export function SiteHeader() {
 
   const savedCount = useAppSelector((state) => state.favorites.propertyIds.length);
   const compareCount = useAppSelector((state) => state.compare.propertyIds.length);
+  const user = useCurrentUser();
 
   const closeMenu = React.useCallback(() => setMenuOpen(false), []);
   const openMenu = React.useCallback(() => setMenuOpen(true), []);
+
+  const handleLogOut = React.useCallback(() => {
+    // Wire this up to your real sign-out action/thunk.
+  }, []);
 
   return (
     <header
@@ -418,7 +732,7 @@ export function SiteHeader() {
               text-[9px] font-medium uppercase tracking-[0.16em]
               text-muted-foreground
               hover:bg-foreground/[0.05] hover:text-foreground
-              sm:inline-flex
+              lg:inline-flex
             "
           >
             <Link href="/list-your-property">
@@ -445,6 +759,12 @@ export function SiteHeader() {
             </Link>
           </Button>
 
+          <div className="mx-1 hidden h-7 w-px bg-border/70 sm:block" />
+
+          <div className="hidden sm:block">
+            <AccountMenu user={user} onLogOut={handleLogOut} />
+          </div>
+
           <Button
             variant="ghost"
             size="icon"
@@ -461,8 +781,10 @@ export function SiteHeader() {
       <MobileMenu
         open={menuOpen}
         onClose={closeMenu}
+        user={user}
         savedCount={savedCount}
         compareCount={compareCount}
+        onLogOut={handleLogOut}
       />
     </header>
   );

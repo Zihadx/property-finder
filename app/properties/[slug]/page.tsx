@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, Check, MapPin } from "lucide-react";
+import { ArrowUpRight, Check, MapPin, Section } from "lucide-react";
 
 import { SiteHeader } from "@/components/layout/site-header";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -21,6 +21,7 @@ import { propertyStatusVariant } from "@/components/property/property-status";
 import { propertyService } from "@/services/property.service";
 import { agentService } from "@/services/agent.service";
 import { EmiCalculator } from "@/components/property/emi-calculator";
+import { ProjectFaqAccordion } from "@/components/project/project-faq";
 
 export async function generateMetadata({
   params,
@@ -304,6 +305,11 @@ export default async function PropertyDetailPage({
             Verified by ListEasy BD.
           </p>
         </section>
+
+
+        
+
+
 
         {/* Similar properties */}
         <section className="pt-16 lg:pt-20">
